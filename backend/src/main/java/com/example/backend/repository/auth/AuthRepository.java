@@ -13,4 +13,5 @@ public interface AuthRepository
 
     boolean existsByEmail(String email);
 
+    boolean existsByIdUsuario(String idUsuario);
 }

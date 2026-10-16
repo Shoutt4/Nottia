@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dtos.auth.AuthRequestDTO;
+import com.example.backend.dtos.auth.LoginRequetDTO;
 import com.example.backend.dtos.auth.TokenResponseDTO;
 import com.example.backend.service.auth.AuthService;
 
@@ -27,4 +28,10 @@ public class AuthController {
     public ResponseEntity<TokenResponseDTO> resgiterUser(@Valid @RequestBody AuthRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.createUsuario(requestDTO));
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDTO> login(@Valid @RequestBody LoginRequetDTO requetDTO) {
+        return ResponseEntity.status(200).body(this.authService.loginUser(requetDTO));
+    }
+
 }

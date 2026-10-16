@@ -1,5 +1,10 @@
 package com.example.backend.entity.auth;
 
+import java.sql.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.example.backend.dtos.auth.Role;
 
 import jakarta.persistence.Column;
@@ -9,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -41,5 +47,9 @@ public class Usuario {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @CreationTimestamp
+    private Date createAt;
+    @UpdateTimestamp
+    private Date updateAt;
 
 }

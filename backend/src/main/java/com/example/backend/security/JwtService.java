@@ -45,4 +45,14 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
+
+    public String getIdUsuario(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignigkey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id_usuario", String.class);
+
+    }
 }

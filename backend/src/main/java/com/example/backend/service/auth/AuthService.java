@@ -3,11 +3,15 @@ package com.example.backend.service.auth;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.authentication.PasswordEncoderParser;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.dtos.auth.AuthRequestDTO;
+import com.example.backend.dtos.auth.LoginRequetDTO;
 import com.example.backend.dtos.auth.Role;
 import com.example.backend.dtos.auth.TokenResponseDTO;
 import com.example.backend.entity.auth.Usuario;
@@ -20,11 +24,14 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
+            AuthenticationManager authenticationManager) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     public Usuario convertirUsuarioRequest(AuthRequestDTO requestDTO) {
@@ -41,6 +48,20 @@ public class AuthService {
             return new TokenResponseDTO(this.jwtService.generateToken(usuario));
         } else {
             throw new authExceotion("El correo ya esta registrado", 404, false);
+        }
+    }
+
+    public TokenResponseDTO loginUser(LoginRequetDTO requetDTO) {
+
+        if (this.authRepository.existsByEmail(requetDTO.getEmail())) {
+            Authentication authentication = this.authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(requetDTO.getEmail(), requetDTO.getPassword()));
+            return TokenResponseDTO.builder()
+                    .token(this.jwtService
+                            .generateToken(this.authRepository.findByEmail(authentication.getName()).orElseThrow()))
+                    .build();
+        } else {
+            throw new authExceotion("usuario no registrado", 403, false);
         }
     }
 }
