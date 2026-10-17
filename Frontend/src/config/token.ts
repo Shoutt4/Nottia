@@ -67,19 +67,31 @@ export function isAuthenticated(): boolean {
 }
 
 export interface CurrentUser {
+  /** `id_usuario` del claim. */
+  id: string | null
   email: string | null
   nombre: string | null
   role: string | null
+  /** Foto de perfil (`urlAvatar`). */
+  avatarUrl: string | null
+  phone: string | null
 }
 
-/** Datos del usuario a partir de los claims del JWT (no verificados). */
+/**
+ * Datos del usuario a partir de los claims del JWT (no verificados).
+ * Es una foto del momento del login: para datos editables, refresca con un
+ * endpoint de perfil cuando exista.
+ */
 export function getCurrentUser(): CurrentUser {
   const payload = getTokenPayload()
-  const asString = (value: unknown) => (typeof value === 'string' ? value : null)
+  const asString = (value: unknown) => (typeof value === 'string' && value.length > 0 ? value : null)
 
   return {
-    email: asString(payload?.sub),
+    id: asString(payload?.id_usuario),
+    email: asString(payload?.email) ?? asString(payload?.sub),
     nombre: asString(payload?.nombre),
     role: asString(payload?.role),
+    avatarUrl: asString(payload?.urlAvatar),
+    phone: asString(payload?.phone),
   }
 }

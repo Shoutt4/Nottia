@@ -245,3 +245,20 @@ export function XCircleIcon(props: IconProps) {
     </Icon>
   )
 }
+
+export function PhoneIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M6.6 3.5H4.9A1.9 1.9 0 0 0 3 5.6c.4 6.4 4.9 11 11.4 11.4a1.9 1.9 0 0 0 2.1-1.9v-1.7a1.9 1.9 0 0 0-1.5-1.85l-2-.4a1.9 1.9 0 0 0-1.75.5l-.7.7a10.6 10.6 0 0 1-3.8-3.8l.7-.7a1.9 1.9 0 0 0 .5-1.75l-.4-2A1.9 1.9 0 0 0 6.6 3.5Z" />
+    </Icon>
+  )
+}
+
+export function ShieldIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3.5 5 6v5.5c0 4.2 2.9 7.8 7 9 4.1-1.2 7-4.8 7-9V6l-7-2.5Z" />
+      <path d="m9.5 12 1.8 1.8 3.4-3.6" />
+    </Icon>
+  )
+}
