@@ -1,0 +1,164 @@
+@import 'tailwindcss';
+
+/* Modo oscuro controlado por la clase `.dark` en <html> (no por el sistema). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  /* Paleta Nottia · Lavanda (claro)
+     Usa estos tokens (bg-canvas, text-ink, text-muted, bg-accent, border-line, …)
+     en lugar de colores genéricos de Tailwind. */
+  --color-canvas: #f8f7fc;
+  --color-surface: #ffffff;
+  --color-line: #e9e5f3;
+  --color-ink: #211c31;
+  --color-muted: #6c6580;
+  --color-accent: #7c5cfc;
+  --color-accent-hover: #6a48f0;
+  --color-accent-soft: #efe9ff;
+  --color-on-accent: #ffffff;
+  --color-danger: #d64545;
+  --color-danger-soft: #fbeaea;
+  --color-on-danger: #ffffff;
+
+  /* Acentos secundarios: solo para detalles de la landing (glows, tarjetas). */
+  --color-accent-2: #3f9e8f;
+  --color-accent-3: #c98a2b;
+
+  --animate-float: float 16s ease-in-out infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-toast-in: toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-toast-out: toast-out 0.16s ease-in both;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-26px) scale(1.06);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(18px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes toast-out {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: translateX(18px) scale(0.97);
+    }
+  }
+}
+
+/* Paleta · Lavanda (oscuro): solo se redefinen los tokens; los componentes
+   que usan las utilidades semánticas se adaptan automáticamente. */
+.dark {
+  --color-canvas: #131120;
+  --color-surface: #1b1828;
+  --color-line: #2b2740;
+  --color-ink: #f1eefb;
+  --color-muted: #a29bc0;
+  --color-accent: #a78bfa;
+  --color-accent-hover: #b9a3ff;
+  --color-accent-soft: #292343;
+  --color-on-accent: #17121f;
+  --color-danger: #f2777a;
+  --color-danger-soft: #3a2023;
+  --color-on-danger: #2a1416;
+  --color-accent-2: #6fd0c2;
+  --color-accent-3: #e6b667;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+  }
+}
+
+/* Fondo "aurora" como gradientes estáticos: mismo efecto que manchas con
+   blur, pero sin capas desenfocadas (mucho más barato de renderizar). */
+@layer components {
+  .aurora {
+    background-image:
+      radial-gradient(
+        58rem 38rem at 72% -12%,
+        color-mix(in oklab, var(--color-accent) 30%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        38rem 30rem at -8% 28%,
+        color-mix(in oklab, var(--color-accent-2) 24%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        34rem 34rem at 108% 82%,
+        color-mix(in oklab, var(--color-accent-3) 18%, transparent),
+        transparent 60%
+      );
+  }
+}
+
+/* Fondo del modal nativo `<dialog>`. */
+.modal::backdrop {
+  background-color: color-mix(in oklab, #0b0a12 55%, transparent);
+}
+
+/* Aparición al hacer scroll (ver `components/ui/Reveal.tsx`). */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

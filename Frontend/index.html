@@ -1,10 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Nottia</title>
+    <script>
+      // Aplica el tema antes de que cargue React para evitar el destello blanco.
+      ;(function () {
+        try {
+          var raw = localStorage.getItem('nottia-ui')
+          var theme = raw ? JSON.parse(raw).state.theme : null
+          if (theme !== 'dark' && theme !== 'light') {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          if (theme === 'dark') document.documentElement.classList.add('dark')
+        } catch (error) {
+          /* sin persistencia: se usa el tema por defecto */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

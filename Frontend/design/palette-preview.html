@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nottia · Paletas de color</title>
+    <style>
+      :root { --font: system-ui, 'Segoe UI', Roboto, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: var(--font); background: #0e1014; color: #e6e9ee; padding: 48px 24px; }
+      .wrap { max-width: 1180px; margin: 0 auto; }
+      h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.4px; }
+      .intro { color: #98a1b0; max-width: 760px; line-height: 1.5; margin: 0; font-size: 14px; }
+      .grid { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); margin-top: 36px; }
+      .palette { border-radius: 20px; padding: 20px; background: #161a21; border: 1px solid #262c37; }
+      .palette h2 { margin: 0 0 3px; font-size: 17px; }
+      .palette p.desc { margin: 0 0 16px; font-size: 13px; color: #98a1b0; line-height: 1.45; }
+      .swatches { display: flex; flex-wrap: wrap; gap: 26px 10px; margin: 0 0 16px; }
+      .sw { width: 42px; height: 42px; border-radius: 11px; border: 1px solid rgba(255,255,255,.09); position: relative; }
+      .sw span { position: absolute; bottom: -15px; left: 0; font-size: 9px; color: #808b9b; white-space: nowrap; }
+      .mock { border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,.07); }
+      .app { display: flex; min-height: 232px; }
+      .side { width: 128px; padding: 12px 10px; }
+      .brand { font-size: 13px; font-weight: 700; margin: 0 6px 14px; }
+      .nav { font-size: 12px; padding: 7px 10px; border-radius: 8px; margin-bottom: 3px; }
+      .main { flex: 1; min-width: 0; }
+      .head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-size: 12px; }
+      .content { padding: 14px; display: grid; gap: 10px; }
+      .card { border-radius: 12px; padding: 12px; }
+      .card h3 { margin: 0 0 4px; font-size: 13px; }
+      .card p { margin: 0; font-size: 11px; line-height: 1.45; }
+      .btn { border: none; border-radius: 9px; padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+      .input { border-radius: 9px; padding: 7px 11px; font-size: 12px; width: 100%; font-family: inherit; color: inherit; }
+      .app { background: var(--bg); color: var(--text); }
+      .side { background: var(--surface); border-right: 1px solid var(--border); }
+      .brand { color: var(--accent); }
+      .nav { color: var(--muted); }
+      .nav.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+      .head { background: var(--surface); border-bottom: 1px solid var(--border); color: var(--muted); }
+      .card { background: var(--surface); border: 1px solid var(--border); }
+      .card h3 { color: var(--text); }
+      .card p { color: var(--muted); }
+      .btn { background: var(--accent); color: var(--on-accent); }
+      .input { background: var(--surface); border: 1px solid var(--border); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Nottia · Paletas de color</h1>
+      <p class="intro">
+        Cuatro paletas minimalistas aplicadas al mismo mock de la app. Cada una usa la misma
+        estructura de tokens: <code>bg</code>, <code>surface</code>, <code>border</code>,
+        <code>text</code>, <code>muted</code>, <code>accent</code>, <code>accent-soft</code>.
+        Ábrela en el navegador y compara; luego me dices cuál eliges.
+      </p>
+
+      <div class="grid">
+        <!-- A. LAVANDA -->
+        <section class="palette" style="--bg:#F8F7FC; --surface:#FFFFFF; --border:#E9E5F3; --text:#211C31; --muted:#6C6580; --accent:#7C5CFC; --accent-soft:#EFE9FF; --on-accent:#FFFFFF;">
+          <h2>A · Lavanda</h2>
+          <p class="desc">Violeta suave sobre fondo frío. Coincide con el acento que ya trae el proyecto.</p>
+          <div class="swatches">
+            <div class="sw" style="background:#7C5CFC"><span>accent</span></div>
+            <div class="sw" style="background:#EFE9FF"><span>accent-soft</span></div>
+            <div class="sw" style="background:#F8F7FC"><span>bg</span></div>
+            <div class="sw" style="background:#FFFFFF"><span>surface</span></div>
+            <div class="sw" style="background:#E9E5F3"><span>border</span></div>
+            <div class="sw" style="background:#211C31"><span>text</span></div>
+            <div class="sw" style="background:#6C6580"><span>muted</span></div>
+          </div>
+          <div class="mock">
+            <div class="app">
+              <div class="side">
+                <div class="brand">Nottia</div>
+                <div class="nav active">Notas</div>
+                <div class="nav">Agenda</div>
+                <div class="nav">Recordatorios</div>
+              </div>
+              <div class="main">
+                <div class="head"><span>Panel</span><button class="btn">Nueva nota</button></div>
+                <div class="content">
+                  <input class="input" value="Buscar notas…" readonly />
+                  <div class="card"><h3>Ideas para el proyecto</h3><p>Repasar la paleta y definir la tipografía.</p></div>
+                  <div class="card"><h3>Comprar café</h3><p>Recordatorio mañana a las 9:00.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- B. SALVIA -->
+        <section class="palette" style="--bg:#F5F8F4; --surface:#FFFFFF; --border:#E2E9E0; --text:#1E2A22; --muted:#66746C; --accent:#4C8C6A; --accent-soft:#E3F1E8; --on-accent:#FFFFFF;">
+          <h2>B · Salvia</h2>
+          <p class="desc">Verde apagado y natural. Transmite calma; muy cómodo para sesiones largas.</p>
+          <div class="swatches">
+            <div class="sw" style="background:#4C8C6A"><span>accent</span></div>
+            <div class="sw" style="background:#E3F1E8"><span>accent-soft</span></div>
+            <div class="sw" style="background:#F5F8F4"><span>bg</span></div>
+            <div class="sw" style="background:#FFFFFF"><span>surface</span></div>
+            <div class="sw" style="background:#E2E9E0"><span>border</span></div>
+            <div class="sw" style="background:#1E2A22"><span>text</span></div>
+            <div class="sw" style="background:#66746C"><span>muted</span></div>
+          </div>
+          <div class="mock">
+            <div class="app">
+              <div class="side">
+                <div class="brand">Nottia</div>
+                <div class="nav active">Notas</div>
+                <div class="nav">Agenda</div>
+                <div class="nav">Recordatorios</div>
+              </div>
+              <div class="main">
+                <div class="head"><span>Panel</span><button class="btn">Nueva nota</button></div>
+                <div class="content">
+                  <input class="input" value="Buscar notas…" readonly />
+                  <div class="card"><h3>Ideas para el proyecto</h3><p>Repasar la paleta y definir la tipografía.</p></div>
+                  <div class="card"><h3>Comprar café</h3><p>Recordatorio mañana a las 9:00.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- C. CIELO -->
+        <section class="palette" style="--bg:#F5F7FA; --surface:#FFFFFF; --border:#E2E8F0; --text:#101828; --muted:#667085; --accent:#5B6BE0; --accent-soft:#EAECFB; --on-accent:#FFFFFF;">
+          <h2>C · Cielo</h2>
+          <p class="desc">Azul-indigo sereno y neutro. Profesional y muy legible; el más “seguro”.</p>
+          <div class="swatches">
+            <div class="sw" style="background:#5B6BE0"><span>accent</span></div>
+            <div class="sw" style="background:#EAECFB"><span>accent-soft</span></div>
+            <div class="sw" style="background:#F5F7FA"><span>bg</span></div>
+            <div class="sw" style="background:#FFFFFF"><span>surface</span></div>
+            <div class="sw" style="background:#E2E8F0"><span>border</span></div>
+            <div class="sw" style="background:#101828"><span>text</span></div>
+            <div class="sw" style="background:#667085"><span>muted</span></div>
+          </div>
+          <div class="mock">
+            <div class="app">
+              <div class="side">
+                <div class="brand">Nottia</div>
+                <div class="nav active">Notas</div>
+                <div class="nav">Agenda</div>
+                <div class="nav">Recordatorios</div>
+              </div>
+              <div class="main">
+                <div class="head"><span>Panel</span><button class="btn">Nueva nota</button></div>
+                <div class="content">
+                  <input class="input" value="Buscar notas…" readonly />
+                  <div class="card"><h3>Ideas para el proyecto</h3><p>Repasar la paleta y definir la tipografía.</p></div>
+                  <div class="card"><h3>Comprar café</h3><p>Recordatorio mañana a las 9:00.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- D. PAPEL -->
+        <section class="palette" style="--bg:#FAF6F0; --surface:#FFFFFF; --border:#ECE1D4; --text:#2B2320; --muted:#7C7168; --accent:#C2683F; --accent-soft:#F8E9DE; --on-accent:#FFFFFF;">
+          <h2>D · Papel</h2>
+          <p class="desc">Beige cálido con acento terracota. Cercano y acogedor, tipo cuaderno.</p>
+          <div class="swatches">
+            <div class="sw" style="background:#C2683F"><span>accent</span></div>
+            <div class="sw" style="background:#F8E9DE"><span>accent-soft</span></div>
+            <div class="sw" style="background:#FAF6F0"><span>bg</span></div>
+            <div class="sw" style="background:#FFFFFF"><span>surface</span></div>
+            <div class="sw" style="background:#ECE1D4"><span>border</span></div>
+            <div class="sw" style="background:#2B2320"><span>text</span></div>
+            <div class="sw" style="background:#7C7168"><span>muted</span></div>
+          </div>
+          <div class="mock">
+            <div class="app">
+              <div class="side">
+                <div class="brand">Nottia</div>
+                <div class="nav active">Notas</div>
+                <div class="nav">Agenda</div>
+                <div class="nav">Recordatorios</div>
+              </div>
+              <div class="main">
+                <div class="head"><span>Panel</span><button class="btn">Nueva nota</button></div>
+                <div class="content">
+                  <input class="input" value="Buscar notas…" readonly />
+                  <div class="card"><h3>Ideas para el proyecto</h3><p>Repasar la paleta y definir la tipografía.</p></div>
+                  <div class="card"><h3>Comprar café</h3><p>Recordatorio mañana a las 9:00.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
