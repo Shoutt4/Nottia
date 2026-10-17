@@ -31,6 +31,8 @@ public class JwtService {
                 .claim("id_usuario", user.getIdUsuario())
                 .claim("role", user.getRole())
                 .claim("nombre", user.getNombre())
+                .claim("urlAvatar", user.getUrlAvatar())
+                .claim("phone", user.getPhone())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignigkey())
@@ -47,10 +49,11 @@ public class JwtService {
     }
 
     public String getIdUsuario(String token) {
+        String auxToken = token.substring(7);
         return Jwts.parser()
                 .verifyWith(getSignigkey())
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(auxToken)
                 .getPayload()
                 .get("id_usuario", String.class);
 

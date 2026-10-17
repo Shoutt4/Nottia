@@ -32,15 +32,15 @@ public class UsuarioService {
     public UserResponseDto usuarioResponseDTO(Usuario usuario) {
         return UserResponseDto.builder().idUsuario(usuario.getIdUsuario()).nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
+                .email(usuario.getEmail())
                 .urlAvatar(usuario.getUrlAvatar()).phone(usuario.getPhone()).build();
     }
 
     @Transactional
     public Map<String, Object> updateUser(String token, UsuarioRequestDto requestDto) {
-        String tokenjwt = token.substring(7);
 
-        if (this.authRepository.existsById(this.jwtService.getIdUsuario(tokenjwt))) {
-            Usuario usuario = this.authRepository.findById(this.jwtService.getIdUsuario(tokenjwt)).orElseThrow();
+        if (this.authRepository.existsById(this.jwtService.getIdUsuario(token))) {
+            Usuario usuario = this.authRepository.findById(this.jwtService.getIdUsuario(token)).orElseThrow();
             usuario.setNombre(requestDto.getNombre());
             usuario.setApellido(requestDto.getApellido());
             usuario.setPassword(this.passwordEncoder.encode(requestDto.getPassword()));
@@ -50,6 +50,18 @@ public class UsuarioService {
 
         } else {
             throw new authExceotion("usuario no registrado", 404, false);
+        }
+    }
+
+    public Map<String, Object> getDetaiillsUser(String token) {
+        Map<String, Object> response = new HashMap<>();
+        String idUser = this.jwtService.getIdUsuario(token);
+        if (this.authRepository.existsById(idUser)) {
+            response.put("succes", true);
+            response.put("data", usuarioResponseDTO(this.authRepository.findById(idUser).orElseThrow()));
+            return response;
+        } else {
+            throw new authExceotion("error al otener usuario no autenticado", 404, false);
         }
     }
 }
