@@ -1,4 +1,4 @@
-package com.example.backend.entity.auth;
+package com.example.backend.entity;
 
 import java.sql.Date;
 

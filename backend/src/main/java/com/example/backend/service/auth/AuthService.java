@@ -14,7 +14,7 @@ import com.example.backend.dtos.auth.AuthRequestDTO;
 import com.example.backend.dtos.auth.LoginRequetDTO;
 import com.example.backend.dtos.auth.Role;
 import com.example.backend.dtos.auth.TokenResponseDTO;
-import com.example.backend.entity.auth.Usuario;
+import com.example.backend.entity.Usuario;
 import com.example.backend.exception.auth.authExceotion;
 import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.security.JwtService;

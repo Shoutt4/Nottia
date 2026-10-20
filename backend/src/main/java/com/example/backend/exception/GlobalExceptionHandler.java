@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
                         "status", exception.getStatus(),
                         "succes", false));
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, Object> res = new HashMap<>();
@@ -33,5 +34,11 @@ public class GlobalExceptionHandler {
         resspuesta.put("message", "errores de campo");
         resspuesta.put("error", res);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resspuesta);
+    }
+
+    @ExceptionHandler(ErrorGlobal.class)
+    public ResponseEntity<Map<String, Object>> errorGlobal(ErrorGlobal ex) {
+        return ResponseEntity.status(404)
+                .body(Map.of("succes", ex.getSucces(), "code", ex.getCodie(), "message", ex.getMessage()));
     }
 }

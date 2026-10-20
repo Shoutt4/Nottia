@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.example.backend.dtos.usuario.UserResponseDto;
 import com.example.backend.dtos.usuario.UsuarioRequestDto;
-import com.example.backend.entity.auth.Usuario;
+import com.example.backend.entity.Usuario;
 import com.example.backend.exception.auth.authExceotion;
 import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.security.JwtService;

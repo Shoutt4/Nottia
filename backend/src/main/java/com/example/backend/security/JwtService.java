@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.example.backend.entity.auth.Usuario;
+import com.example.backend.entity.Usuario;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -31,6 +31,7 @@ public class JwtService {
                 .claim("id_usuario", user.getIdUsuario())
                 .claim("role", user.getRole())
                 .claim("nombre", user.getNombre())
+                .claim("email", user.getEmail())
                 .claim("urlAvatar", user.getUrlAvatar())
                 .claim("phone", user.getPhone())
                 .issuedAt(new Date(System.currentTimeMillis()))

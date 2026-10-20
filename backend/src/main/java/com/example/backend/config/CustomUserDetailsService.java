@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import com.example.backend.entity.auth.Usuario;
+import com.example.backend.entity.Usuario;
 import com.example.backend.exception.auth.authExceotion;
 import com.example.backend.repository.auth.AuthRepository;
 
