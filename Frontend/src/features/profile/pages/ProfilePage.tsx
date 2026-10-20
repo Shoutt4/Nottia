@@ -1,98 +1,100 @@
-import { useNavigate } from 'react-router-dom'
-
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
-import { LogOutIcon, MailIcon, PhoneIcon, ShieldIcon, UserIcon } from '@/components/ui/icons'
+import { ChevronRightIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/ui/Reveal'
-import { clearToken, getCurrentUser } from '@/config'
-import { ROUTES } from '@/config/routes'
+import { getErrorMessage } from '@/lib/errors'
+import { toast } from '@/lib/toast'
 
+import { AccountNav } from '../components/AccountNav'
+import { PlanCard } from '../components/PlanCard'
 import { ProfileField } from '../components/ProfileField'
+import { ProfileSkeleton } from '../components/ProfileSkeleton'
+import { useProfile } from '../hooks/useProfile'
+import { formatDate, fullName } from '../lib/format'
 
-const ROLE_LABELS: Record<string, string> = {
-  USUARIO: 'Usuario',
-  ADMIN: 'Administrador',
-}
-
-/** Perfil: datos del usuario leídos de los claims del JWT. */
+/** Información de la cuenta: datos reales desde `GET /api/usuarios/me`. */
 export function ProfilePage() {
-  const user = getCurrentUser()
-  const navigate = useNavigate()
+  const { data: profile, isPending, isError, isFetching, error, refetch } = useProfile()
 
-  const name = user.nombre ?? 'Tu cuenta'
-  const email = user.email ?? 'Sin correo'
-  const role = user.role ? (ROLE_LABELS[user.role] ?? user.role) : null
-
-  const handleLogout = () => {
-    clearToken()
-    navigate(ROUTES.home)
-  }
+  const name = fullName(profile) || profile?.email || 'Tu cuenta'
+  const comingSoon = () => toast.info('La edición de tus datos estará disponible pronto.')
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-5 sm:px-8">
       <Reveal>
-        <h1 className="text-2xl font-bold tracking-tight">Perfil</h1>
-        <p className="mt-1 text-sm text-muted">Tu información en Nottia.</p>
+        <nav aria-label="Ruta" className="flex items-center gap-1.5 text-xs font-medium text-muted">
+          <span>Cuenta</span>
+          <ChevronRightIcon className="h-3.5 w-3.5" />
+          <span className="text-ink">Resumen de cuenta</span>
+        </nav>
+
+        <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          Información de la cuenta
+        </h1>
+        <p className="mt-1 text-sm text-muted">Tus datos personales y el estado de tu cuenta.</p>
       </Reveal>
 
-      <Reveal delay={80}>
-        <div className="overflow-hidden rounded-3xl border border-line bg-surface">
-          <div className="aurora h-24 opacity-80" />
-          <div className="flex flex-col items-center px-6 pb-7 text-center">
-            <Avatar
-              name={name}
-              src={user.avatarUrl}
-              className="-mt-12 h-20 w-20 rounded-full text-2xl ring-4 ring-surface"
-            />
-            <h2 className="mt-4 text-xl font-bold">{name}</h2>
-            <p className="text-sm text-muted">{email}</p>
-            {role && (
-              <span className="mt-3 rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent">
-                {role}
-              </span>
-            )}
-          </div>
+      <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-8">
+        <AccountNav />
+
+        <div className="min-w-0">
+          {isPending ? (
+            <ProfileSkeleton />
+          ) : isError || !profile ? (
+            <div className="rounded-3xl border border-line bg-surface px-6 py-12 text-center">
+              <p className="text-sm font-semibold text-ink">No pudimos cargar tu cuenta</p>
+              <p className="mx-auto mt-1.5 max-w-sm text-sm text-pretty text-muted">
+                {getErrorMessage(error)}
+              </p>
+              <Button
+                variant="secondary"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="mt-5"
+              >
+                {isFetching ? 'Reintentando…' : 'Reintentar'}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <Reveal delay={60}>
+                <PlanCard />
+              </Reveal>
+
+              <Reveal delay={120}>
+                <section className="rounded-3xl border border-line bg-surface p-5 sm:p-7">
+                  <div className="grid gap-6 sm:grid-cols-[auto_1fr] sm:gap-8">
+                    <div className="flex justify-center sm:block">
+                      <Avatar
+                        name={name}
+                        src={profile.urlAvatar}
+                        className="h-28 w-28 rounded-full text-3xl ring-4 ring-surface sm:h-36 sm:w-36 sm:text-4xl"
+                      />
+                    </div>
+
+                    <div className="divide-y divide-line">
+                      <ProfileField label="Nombre" value={name} onEdit={comingSoon} />
+                      <ProfileField
+                        label="Correo electrónico"
+                        value={profile.email}
+                        onEdit={comingSoon}
+                      />
+                      <ProfileField label="Teléfono" value={profile.phone ?? 'Sin registrar'} />
+                      <ProfileField label="Miembro desde" value={formatDate(profile.createAt)} />
+                    </div>
+                  </div>
+                </section>
+              </Reveal>
+
+              <Reveal delay={180}>
+                <p className="text-center text-xs text-muted lg:text-left">
+                  Estos datos se obtienen directamente de tu cuenta en Nottia.
+                </p>
+              </Reveal>
+            </div>
+          )}
         </div>
-      </Reveal>
-
-      <Reveal delay={140}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <ProfileField icon={<UserIcon className="h-5 w-5" />} label="Nombre" value={name} />
-          <ProfileField icon={<MailIcon className="h-5 w-5" />} label="Correo" value={email} />
-          <ProfileField
-            icon={<PhoneIcon className="h-5 w-5" />}
-            label="Teléfono"
-            value={user.phone ?? 'Sin registrar'}
-          />
-          <ProfileField
-            icon={<ShieldIcon className="h-5 w-5" />}
-            label="Rol"
-            value={role ?? 'Sin rol'}
-          />
-          <ProfileField
-            icon={<UserIcon className="h-5 w-5" />}
-            label="ID de usuario"
-            value={user.id ?? 'No disponible'}
-          />
-        </div>
-      </Reveal>
-
-      <Reveal delay={200}>
-        <div className="rounded-3xl border border-dashed border-line bg-surface/60 px-6 py-8 text-center">
-          <p className="text-sm font-semibold text-ink">Perfil temporal</p>
-          <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-            Estos datos vienen del token de tu sesión. Aquí podrás editarlos cuando conectemos el
-            endpoint de usuarios.
-          </p>
-        </div>
-      </Reveal>
-
-      <Reveal delay={260}>
-        <Button variant="secondary" onClick={handleLogout} className="w-full py-3 sm:w-auto">
-          <LogOutIcon className="h-4 w-4" />
-          Cerrar sesión
-        </Button>
-      </Reveal>
+      </div>
     </div>
   )
 }

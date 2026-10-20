@@ -5,6 +5,10 @@ export const ROUTES = {
   register: '/register',
   dashboard: '/dashboard',
   profile: '/perfil',
+  notes: '/notas',
 } as const
+
+/** Ruta del editor de una nota concreta. */
+export const notePath = (id: string) => `${ROUTES.notes}/${id}`
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES]

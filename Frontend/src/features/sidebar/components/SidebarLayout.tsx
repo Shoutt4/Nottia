@@ -34,7 +34,7 @@ export function SidebarLayout() {
       <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
 
       <div className="min-w-0 flex-1">
-        <main className="mx-auto w-full max-w-5xl px-5 py-8 sm:px-8">
+        <main className="w-full py-8">
           <Outlet />
         </main>
       </div>

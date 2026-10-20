@@ -2,7 +2,8 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { ROUTES } from '@/config/routes'
 import { LoginPage } from '@/features/auth'
-import { WelcomePage } from '@/features/dashboard'
+import { HomePage } from '@/features/dashboard'
+import { NoteEditorPage } from '@/features/notes'
 import { ProfilePage } from '@/features/profile'
 import { SidebarLayout } from '@/features/sidebar'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
@@ -19,6 +20,7 @@ import { PublicOnlyRoute } from './PublicOnlyRoute'
  *
  * - `PublicOnlyRoute`: si ya hay sesión, redirige a `/dashboard`.
  * - `ProtectedRoute` + `SidebarLayout`: zona privada con el menú lateral.
+ * - El editor de notas cuelga de `ProtectedRoute` pero fuera de `SidebarLayout`.
  */
 export const router = createBrowserRouter([
   {
@@ -35,10 +37,12 @@ export const router = createBrowserRouter([
       {
         element: <SidebarLayout />,
         children: [
-          { path: ROUTES.dashboard, element: <WelcomePage /> },
+          { path: ROUTES.dashboard, element: <HomePage /> },
           { path: ROUTES.profile, element: <ProfilePage /> },
         ],
       },
+      // El editor ocupa toda la pantalla (tiene su propia lista de notas).
+      { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },
     ],
   },
   {

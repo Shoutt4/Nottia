@@ -1,0 +1,6 @@
+export { NoteCard } from './components/NoteCard'
+export { NotesRail } from './components/NotesRail'
+export { useNotes } from './hooks/useNotes'
+export { NoteEditorPage } from './pages/NoteEditorPage'
+export { useNotesStore } from './store/notesStore'
+export type { Note } from './types'
