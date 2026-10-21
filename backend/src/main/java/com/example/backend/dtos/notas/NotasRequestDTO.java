@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data 
-@AllArgsConstructor 
-@NoArgsConstructor 
-@Builder 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class NotasRequestDTO {
     private String idCuaderno;
     private String idUsuario;

@@ -24,7 +24,6 @@ import com.example.backend.dtos.notas.*;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/notas")
 public class NotasController {
@@ -41,22 +40,26 @@ public class NotasController {
             Pageable pageable) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.getNotasByUser(token, pageable));
     }
+
     @PreAuthorize("hasRole('USUARIO')")
     @GetMapping("/{id}")
-    public ResponseEntity<NotasResponse> getByIdNota(@Valid @PathVariable  String id ,@RequestHeader("Authorization")  String token){
+    public ResponseEntity<NotasResponse> getByIdNota(@Valid @PathVariable String id,
+            @RequestHeader("Authorization") String token) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.getNotaById(id, token));
     }
+
     @PreAuthorize("hasRole('USUARIO')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<NotasResponse> updateNota(@Valid  @PathVariable String id , @RequestParam  NotasRequestDTO requestDTO ,@RequestHeader("Authorization") String token){
-        return  ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.updateNota(requestDTO, id, token));
+    public ResponseEntity<NotasResponse> updateNota(@Valid @PathVariable String id,
+            @RequestBody NotasRequestDTO requestDTO, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.updateNota(requestDTO, id, token));
     }
 
     @PreAuthorize("hasRole('USUARIO')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Map<String,Object>> DeleteNota(@Valid @PathVariable String id ,@RequestHeader("Authorization") String token ){
-        return  ResponseEntity.status(200).body(this.notasService.deleteNota(id, token));
+    public ResponseEntity<Map<String, Object>> DeleteNota(@Valid @PathVariable String id,
+            @RequestHeader("Authorization") String token) {
+        return ResponseEntity.status(200).body(this.notasService.deleteNota(id, token));
     }
-  
 
 }
