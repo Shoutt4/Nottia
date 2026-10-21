@@ -1,4 +1,4 @@
-package com.example.backend.mapper;
+package com.example.backend.mapper.nota;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.example.backend.dtos.notas.NotasRequestDTO;
+import com.example.backend.entity.Cuaderno;
 import com.example.backend.entity.Nota;
 import com.example.backend.entity.Usuario;
 
@@ -25,5 +26,14 @@ public interface NotaMapper {
         Usuario usuario = new Usuario();
         usuario.setIdUsuario(idUsuario);
         return usuario;
+    }
+
+    default Cuaderno mapCuaderno(String idCuaderno) {
+        if (idCuaderno == null) {
+            return null;
+        }
+        Cuaderno cuaderno = new Cuaderno();
+        cuaderno.setIdCuader(idCuaderno);
+        return cuaderno;
     }
 }

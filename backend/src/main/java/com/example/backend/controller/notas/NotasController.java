@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +61,12 @@ public class NotasController {
     public ResponseEntity<Map<String, Object>> DeleteNota(@Valid @PathVariable String id,
             @RequestHeader("Authorization") String token) {
         return ResponseEntity.status(200).body(this.notasService.deleteNota(id, token));
+    }
+
+    @PreAuthorize("hasRole('USUARIO')")
+    @PostMapping("/save")
+    public ResponseEntity<Map<String, Object>> saveNota(@Valid @RequestBody SaveNotaRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.saveNota(requestDTO));
     }
 
 }

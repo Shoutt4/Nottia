@@ -27,10 +27,10 @@ public class Nota {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idNota;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cuaderno", referencedColumnName = "id_cuaderno")
     private Cuaderno iCuaderno;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private Usuario idUsuario;
     @Size(max = 200)
