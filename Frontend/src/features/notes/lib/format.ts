@@ -29,3 +29,29 @@ export function formatRelativeDate(value: string): string {
 export function noteExcerpt(content: string): string {
   return content.replace(/\s+/g, ' ').trim()
 }
+
+const DAY = new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' })
+const DAY_YEAR = new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', year: 'numeric' })
+
+function sameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
+
+/** Encabezado del listado: "Hoy", "Ayer", "12 oct" o "12 oct 2025". */
+export function formatDayLabel(value: string): string {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return 'Sin fecha'
+
+  const now = new Date()
+  const yesterday = new Date(now)
+  yesterday.setDate(now.getDate() - 1)
+
+  if (sameDay(date, now)) return 'Hoy'
+  if (sameDay(date, yesterday)) return 'Ayer'
+
+  return date.getFullYear() === now.getFullYear() ? DAY.format(date) : DAY_YEAR.format(date)
+}

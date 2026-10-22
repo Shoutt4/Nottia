@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useMatch } from 'react-router-dom'
 
 import { LogoWordmark } from '@/components/brand/LogoWordmark'
 import { MenuIcon } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { ROUTES } from '@/config/routes'
+import { cn } from '@/lib/utils'
 
 import { Sidebar } from './Sidebar'
 
@@ -13,6 +15,8 @@ import { Sidebar } from './Sidebar'
  */
 export function SidebarLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  // El editor de notas ocupa el alto disponible y gestiona su propio scroll.
+  const isNoteEditor = useMatch(`${ROUTES.notes}/:noteId`) !== null
 
   return (
     <div className="min-h-dvh bg-canvas text-ink lg:flex">
@@ -34,7 +38,12 @@ export function SidebarLayout() {
       <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
 
       <div className="min-w-0 flex-1">
-        <main className="w-full py-8">
+        <main
+          className={cn(
+            'w-full',
+            isNoteEditor ? 'h-[calc(100dvh-3.5rem)] lg:h-dvh' : 'py-8',
+          )}
+        >
           <Outlet />
         </main>
       </div>

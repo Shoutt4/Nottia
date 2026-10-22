@@ -1,20 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { PencilIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/ui/Reveal'
-import { NotesRail, useNotes } from '@/features/notes'
+import { NotesRail, useInfiniteNotes } from '@/features/notes'
 import { useProfile } from '@/features/profile'
+import { getErrorMessage } from '@/lib/errors'
+import { toast } from '@/lib/toast'
 
 import { BoardSettingsDialog } from '../components/BoardSettingsDialog'
 import { CoverBanner } from '../components/CoverBanner'
 
-/** Inicio: portada editable a sangre + notas (por ahora, datos locales). */
+/** Inicio: portada editable a sangre + notas del usuario. */
 export function HomePage() {
   const { data: profile } = useProfile()
-  const { notes } = useNotes()
+  const notesQuery = useInfiniteNotes()
   const [settingsOpen, setSettingsOpen] = useState(false)
+  /** Evita pedir la misma página varias veces mientras el scroll dispara eventos. */
+  const loadingMore = useRef(false)
 
+  // Une las páginas del carrusel sin repetir notas si el backend reordena.
+  const notes = useMemo(() => {
+    const seen = new Set<string>()
+
+    return (notesQuery.data?.pages.flatMap((page) => page.notes) ?? []).filter((note) => {
+      if (seen.has(note.id)) return false
+      seen.add(note.id)
+      return true
+    })
+  }, [notesQuery.data])
+
+  const total = notesQuery.data?.pages[0]?.total ?? notes.length
+  const defaultNotebookId = notes.find((note) => note.idCuaderno)?.idCuaderno ?? null
   const firstName = profile?.nombre?.trim().split(/\s+/)[0]
+
+  const shownError = useRef<unknown>(null)
+  useEffect(() => {
+    if (notesQuery.isError && notesQuery.error !== shownError.current) {
+      shownError.current = notesQuery.error
+      toast.error(getErrorMessage(notesQuery.error))
+    }
+  }, [notesQuery.isError, notesQuery.error])
+
+  const loadMore = () => {
+    if (!notesQuery.hasNextPage || loadingMore.current) return
+
+    loadingMore.current = true
+    void notesQuery.fetchNextPage().finally(() => {
+      loadingMore.current = false
+    })
+  }
 
   return (
     <div>
@@ -47,11 +81,17 @@ export function HomePage() {
             <div className="mb-4 flex items-baseline justify-between gap-4">
               <h2 className="text-sm font-semibold text-ink">Notas</h2>
               <span className="text-xs text-muted">
-                {notes.length} {notes.length === 1 ? 'nota' : 'notas'}
+                {total} {total === 1 ? 'nota' : 'notas'}
               </span>
             </div>
 
-            <NotesRail notes={notes} />
+            <NotesRail
+              notes={notes}
+              defaultNotebookId={defaultNotebookId}
+              hasMore={notesQuery.hasNextPage}
+              loadingMore={notesQuery.isFetchingNextPage}
+              onLoadMore={loadMore}
+            />
           </section>
         </Reveal>
       </div>

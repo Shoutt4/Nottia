@@ -1,14 +1,44 @@
-/** Una nota tal como se muestra en el inicio y en el editor (aún sin backend). */
+/** Una nota tal como la devuelve el backend. */
 export interface Note {
   id: string
-  /** Cuaderno al que pertenece. */
+  idCuaderno: string | null
+  /** Nombre visible del cuaderno (la API solo envía el id; si falta, se usa "Notas"). */
   notebook: string
   /** Vacío = nota sin título. */
   title: string
-  /** Cuerpo completo; la vista previa se deriva de aquí. */
   content: string
-  /** ISO 8601; se usa para el "hace X". */
+  /** ISO 8601; alimenta el "hace X". */
   updatedAt: string
-  /** Indicador visual de nota protegida. */
-  locked?: boolean
+  /** `bloqueado` en la API. */
+  locked: boolean
+  /** `fijado` en la API. */
+  pinned: boolean
+}
+
+/** Página de `GET /api/notas/all`. */
+export interface NotePage {
+  notes: Note[]
+  page: number
+  size: number
+  total: number
+  totalPages: number
+}
+
+/** Cuerpo de `POST /api/notas/save`. */
+export interface CreateNotePayload {
+  idCuaderno: string | null
+  idUsuario: string
+  titulo: string
+  contenido: string
+  bloqueado: boolean
+  fijado: boolean
+}
+
+/** Cuerpo de `PUT /api/notas/update/{id}`. */
+export interface UpdateNotePayload {
+  idCuaderno: string | null
+  titulo: string
+  contenido: string
+  bloqueado: boolean
+  fijado: boolean
 }

@@ -39,10 +39,10 @@ export const router = createBrowserRouter([
         children: [
           { path: ROUTES.dashboard, element: <HomePage /> },
           { path: ROUTES.profile, element: <ProfilePage /> },
+          // El editor vive dentro del shell (menú visible) y ocupa el alto disponible.
+          { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },
         ],
       },
-      // El editor ocupa toda la pantalla (tiene su propia lista de notas).
-      { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },
     ],
   },
   {
