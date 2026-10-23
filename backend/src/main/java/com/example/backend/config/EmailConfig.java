@@ -25,6 +25,8 @@ public class EmailConfig {
         properties.put("mail.smtp.socketFactory.port", "465");
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.put("mail.smtp.socketFactory.fallback", "false");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         return properties;
 
     }

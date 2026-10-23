@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Notificación</title>
 </head>
-<body>
-    <p style="color:blue" th:text="${message}"></p>
+<body style="margin: 0; padding: 0; background-color: #fdf2f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #fdf2f8; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                
+                <!-- Contenedor Principal -->
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15);">
+                    
+                    <!-- Cabecera decorativa -->
+                    <tr>
+                        <td align="center" style="background: linear-gradient(135deg, #f472b6, #db2777); padding: 30px 20px;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;">✨ ¡Hola! ✨</h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Cuerpo del mensaje -->
+                    <tr>
+                        <td style="padding: 40px 30px; text-align: center;">
+                            <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;" th:text="${message}"></p>
+                            
+                            <!-- Mensaje de agradecimiento tierno -->
+                            <div style="background-color: #fdf2f8; border-radius: 12px; padding: 15px 20px; display: inline-block; margin-top: 10px;">
+                                <p style="color: #db2777; font-size: 14px; font-style: italic; margin: 0;">
+                                    💖 Muchas gracias por ser parte de mi distraccion morite Chleo 🌸
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Pie de página -->
+                    <tr>
+                        <td align="center" style="background-color: #f9fafb; padding: 20px; border-top: 1px solid #f3f4f6;">
+                            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                                Este es un mensaje automático, por favor no respondas a este correo.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+            </td>
+        </tr>
+    </table>
+
 </body>
 </html>
