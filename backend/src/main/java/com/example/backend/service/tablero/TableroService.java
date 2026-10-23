@@ -27,7 +27,8 @@ public class TableroService {
     }
 
     public ResponseTableroAllDTO convertirTablero(Tablero tablero) {
-        return ResponseTableroAllDTO.builder().idUsuario(tablero.getIdUsuario()).idTablero(tablero.getIdTablero())
+        return ResponseTableroAllDTO.builder().idUsuario(tablero.getIdUsuario().getIdUsuario())
+                .idTablero(tablero.getIdTablero())
                 .titulo(tablero.getTitulo()).tipoPortada(tablero.getTipoPortada())
                 .portadaValor(tablero.getPortadaValor()).createAt(tablero.getCreateAt()).updateAt(tablero.getUpdateAt())
                 .build();

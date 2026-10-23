@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 public class ResponseTableroAllDTO {
     private String idTablero;
-    private Usuario idUsuario;
+    private String idUsuario;
     private String titulo;
     private String tipoPortada;
     private String portadaValor;

@@ -1,6 +1,5 @@
 package com.example.backend.service.notas;
 
-import com.example.backend.mapper.nota.SaveNotaMapperImpl;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -22,7 +21,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class NotasService {
-    private final SaveNotaMapperImpl saveNotaMapperImpl;
     private final NotasRepository notasRepository;
     private final JwtService jwtService;
     private final CuadernoRepository cuadernoRepository;
@@ -30,12 +28,11 @@ public class NotasService {
     private final SaveNotaMapper saveNotaMapper;
 
     public NotasService(NotasRepository notasRepository, JwtService jwtService, CuadernoRepository cuadernoRepository,
-            NotaMapper nMapper, SaveNotaMapperImpl saveNotaMapperImpl, SaveNotaMapper saveNotaMapper) {
+            NotaMapper nMapper, SaveNotaMapper saveNotaMapper) {
         this.notasRepository = notasRepository;
         this.jwtService = jwtService;
         this.cuadernoRepository = cuadernoRepository;
         this.mapperNota = nMapper;
-        this.saveNotaMapperImpl = saveNotaMapperImpl;
         this.saveNotaMapper = saveNotaMapper;
     }
 
