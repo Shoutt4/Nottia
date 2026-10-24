@@ -42,6 +42,8 @@ public class Usuario {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerifi = false;
     @Column(columnDefinition = "TEXT")
     private String urlAvatar;
     private String phone;

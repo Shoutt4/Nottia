@@ -1,5 +1,7 @@
 package com.example.backend.controller.auth;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponseDTO> resgiterUser(@Valid @RequestBody AuthRequestDTO requestDTO) {
+    public ResponseEntity<Map<String, Object>> resgiterUser(@Valid @RequestBody AuthRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.createUsuario(requestDTO));
     }
 

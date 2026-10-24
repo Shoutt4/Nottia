@@ -19,19 +19,23 @@ import com.example.backend.exception.auth.authExceotion;
 import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.security.JwtService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private EmailVerificationTokenService emailVerificationTokenService;
 
     public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.emailVerificationTokenService = emailVerificationTokenService;
     }
 
     public Usuario convertirUsuarioRequest(AuthRequestDTO requestDTO) {
@@ -41,24 +45,33 @@ public class AuthService {
                 .password(passwordEncoder.encode(requestDTO.getPassword())).role(Role.USUARIO).build();
     }
 
-    public TokenResponseDTO createUsuario(AuthRequestDTO requestDTO) {
+    @Transactional
+    public Map<String, Object> createUsuario(AuthRequestDTO requestDTO) {
 
         if (!this.authRepository.existsByEmail(requestDTO.getEmail())) {
             Usuario usuario = this.authRepository.save(convertirUsuarioRequest(requestDTO));
-            return new TokenResponseDTO(this.jwtService.generateToken(usuario));
+            this.emailVerificationTokenService.enviarEmailVerification(usuario);
+
+            return (Map.of("suces", true, "message", "usuario creado correctamente revisa tu correo para  verifica tu cuenta"));
+
         } else {
-            throw new authExceotion("El correo ya esta registrado", 404, false);
+            throw new authExceotion("El correo ya esta registrado", 409, false);
         }
     }
 
     public TokenResponseDTO loginUser(LoginRequetDTO requetDTO) {
 
         if (this.authRepository.existsByEmail(requetDTO.getEmail())) {
+
             Authentication authentication = this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(requetDTO.getEmail(), requetDTO.getPassword()));
+            Usuario usuario = this.authRepository.findByEmail(authentication.getName()).orElseThrow();
+            if (!usuario.isEmailVerifi()) {
+                throw new authExceotion("veificar  email", 404, false);
+            }
             return TokenResponseDTO.builder()
                     .token(this.jwtService
-                            .generateToken(this.authRepository.findByEmail(authentication.getName()).orElseThrow()))
+                            .generateToken(usuario))
                     .build();
         } else {
             throw new authExceotion("usuario no registrado", 403, false);
