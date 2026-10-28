@@ -1,8 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import { ROUTES } from '@/config/routes'
-import { LoginPage } from '@/features/auth'
+import { LoginPage, RegisterPage, VerifyEmailPage } from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
+import { NotebooksPage } from '@/features/notebooks'
 import { NoteEditorPage } from '@/features/notes'
 import { ProfilePage } from '@/features/profile'
 import { SidebarLayout } from '@/features/sidebar'
@@ -20,7 +21,7 @@ import { PublicOnlyRoute } from './PublicOnlyRoute'
  *
  * - `PublicOnlyRoute`: si ya hay sesión, redirige a `/dashboard`.
  * - `ProtectedRoute` + `SidebarLayout`: zona privada con el menú lateral.
- * - El editor de notas cuelga de `ProtectedRoute` pero fuera de `SidebarLayout`.
+ * - `/verify-email` va sin guardas: el enlace del correo debe abrirse con o sin sesión.
  */
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
     children: [
       { path: ROUTES.home, element: <LandingPage /> },
       { path: ROUTES.login, element: <LoginPage /> },
-      { path: ROUTES.register, element: <ComingSoonPage title="Crear cuenta" /> },
+      { path: ROUTES.register, element: <RegisterPage /> },
     ],
   },
   {
@@ -38,12 +39,19 @@ export const router = createBrowserRouter([
         element: <SidebarLayout />,
         children: [
           { path: ROUTES.dashboard, element: <HomePage /> },
+          { path: ROUTES.notebooks, element: <NotebooksPage /> },
           { path: ROUTES.profile, element: <ProfilePage /> },
           // El editor vive dentro del shell (menú visible) y ocupa el alto disponible.
           { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },
         ],
       },
     ],
+  },
+  {
+    // El enlace llega desde el correo: debe funcionar con o sin sesión,
+    // así que no va dentro de `PublicOnlyRoute` ni de `ProtectedRoute`.
+    path: ROUTES.verifyEmail,
+    element: <VerifyEmailPage />,
   },
   {
     path: '*',

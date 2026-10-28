@@ -8,7 +8,7 @@ interface ApiErrorBody {
   error?: Record<string, string> | string
 }
 
-export type AppErrorKind = 'network' | 'auth' | 'validation' | 'client' | 'server' | 'unknown'
+export type AppErrorKind = 'network' | 'auth' | 'validation' | 'client' | 'server' | 'unexpected'
 
 /** Forma estándar de cualquier error, lista para mostrar al usuario. */
 export interface AppError {
@@ -39,10 +39,15 @@ function normalizeFields(fields: ApiErrorBody['error']): Record<string, string> 
 }
 
 /**
- * Convierte cualquier error (Axios, red o excepción) en un `AppError` estándar.
+ * Convierte un error (Axios, red o excepción) en un `AppError` estándar.
+ * Acepta `null` porque TanStack Query tipa `error` como `Error | null`.
  * Úsalo siempre antes de mostrar un error al usuario.
  */
-export function getAppError(error: unknown): AppError {
+export function getAppError(error: Error | null): AppError {
+  if (!error) {
+    return { kind: 'unexpected', message: FALLBACK, fields: {} }
+  }
+
   if (isAxiosError(error)) {
     if (!error.response) {
       return {
@@ -77,14 +82,14 @@ export function getAppError(error: unknown): AppError {
     return { kind: 'client', status, message: messageForStatus(status, body.message), fields }
   }
 
-  if (error instanceof Error && error.message) {
-    return { kind: 'unknown', message: error.message, fields: {} }
+  if (error.message) {
+    return { kind: 'unexpected', message: error.message, fields: {} }
   }
 
-  return { kind: 'unknown', message: FALLBACK, fields: {} }
+  return { kind: 'unexpected', message: FALLBACK, fields: {} }
 }
 
 /** Atajo: solo el mensaje estándar. */
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: Error | null): string {
   return getAppError(error).message
 }

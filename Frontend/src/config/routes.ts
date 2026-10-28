@@ -3,7 +3,9 @@ export const ROUTES = {
   home: '/',
   login: '/login',
   register: '/register',
+  verifyEmail: '/verify-email',
   dashboard: '/dashboard',
+  notebooks: '/cuadernos',
   profile: '/perfil',
   notes: '/notas',
 } as const

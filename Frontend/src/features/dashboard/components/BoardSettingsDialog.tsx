@@ -3,6 +3,10 @@ import type { ChangeEvent, MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 
 import { CheckIcon, ImageIcon, XIcon } from '@/components/ui/icons'
+import { getCurrentUser } from '@/config'
+import { useUpdateBoard } from '@/features/board'
+import type { BoardResponse } from '@/features/board'
+import { getErrorMessage } from '@/lib/errors'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 import { useCoverStore } from '@/stores/coverStore'
@@ -17,14 +21,22 @@ const ICON_BUTTON_CLASS =
 const SOFT_BUTTON_CLASS =
   'inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium text-ink transition-colors duration-200 hover:border-accent/50 hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60'
 
-/** Panel "Editar tablero": portada (imagen o preset) y alto de la cabecera. */
-export function BoardSettingsDialog({ onClose }: { onClose: () => void }) {
+/** Panel "Editar tablero": título, portada (imagen o preset) y alto de la cabecera. */
+export function BoardSettingsDialog({
+  board,
+  onClose,
+}: {
+  board?: BoardResponse
+  onClose: () => void
+}) {
   const cover = useCoverStore((state) => state.cover)
   const setCover = useCoverStore((state) => state.setCover)
   const height = useCoverStore((state) => state.height)
   const setHeight = useCoverStore((state) => state.setHeight)
+  const updateBoard = useUpdateBoard()
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const [titulo, setTitulo] = useState(board?.titulo ?? '')
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
@@ -70,7 +82,34 @@ export function BoardSettingsDialog({ onClose }: { onClose: () => void }) {
   const reset = () => {
     setCover(null)
     setHeight('normal')
+    setTitulo('')
     toast.info('Tablero restablecido.')
+  }
+
+  /** Guarda título y portada en `PUT /api/tablero/update`. */
+  const handleDone = () => {
+    const idUsuario = board?.idUsuario ?? getCurrentUser().id
+
+    if (!idUsuario) {
+      toast.error('No pudimos identificar tu cuenta. Vuelve a iniciar sesión.')
+      return
+    }
+
+    updateBoard.mutate(
+      {
+        idUsuario,
+        titulo: titulo.trim() || 'Home',
+        tipoPortada: cover ? (cover.startsWith('linear-gradient') ? 'gradiente' : 'imagen') : null,
+        portadaValor: cover,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Tablero guardado.')
+          onClose()
+        },
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    )
   }
 
   return createPortal(
@@ -97,6 +136,20 @@ export function BoardSettingsDialog({ onClose }: { onClose: () => void }) {
         </div>
 
         <CoverSurface cover={cover} className="mt-5 aspect-[16/6] rounded-2xl border border-line" />
+
+        <section className="mt-5">
+          <label className="block">
+            <span className="text-xs font-semibold text-ink">Título del tablero</span>
+            <input
+              type="text"
+              value={titulo}
+              onChange={(event) => setTitulo(event.target.value)}
+              placeholder="Mi tablero"
+              maxLength={80}
+              className="mt-2 w-full rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/25"
+            />
+          </label>
+        </section>
 
         <section className="mt-5">
           <h3 className="text-xs font-semibold text-ink">Portada</h3>
@@ -202,10 +255,11 @@ export function BoardSettingsDialog({ onClose }: { onClose: () => void }) {
           </button>
           <button
             type="button"
-            onClick={onClose}
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            onClick={handleDone}
+            disabled={updateBoard.isPending}
+            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Listo
+            {updateBoard.isPending ? 'Guardando…' : 'Listo'}
           </button>
         </div>
 

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { getCurrentUser } from '@/config'
-import { notePath, ROUTES } from '@/config/routes'
+import { notePath } from '@/config/routes'
 import { getErrorMessage } from '@/lib/errors'
 import { toast } from '@/lib/toast'
 
@@ -32,15 +32,7 @@ export function useNewNote(notebookId?: string | null) {
         fijado: false,
       },
       {
-        onSuccess: (note) => {
-          if (note) {
-            navigate(notePath(note.id))
-            return
-          }
-
-          toast.success('Nota creada.')
-          navigate(ROUTES.dashboard)
-        },
+        onSuccess: (note) => navigate(notePath(note.id)),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     )

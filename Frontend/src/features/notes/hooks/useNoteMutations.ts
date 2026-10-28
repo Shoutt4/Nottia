@@ -31,7 +31,7 @@ export function useCreateNote() {
     onSuccess: (note) => {
       queryClient.invalidateQueries({ queryKey: notesKeys.lists() })
       queryClient.invalidateQueries({ queryKey: notesKeys.infinites() })
-      if (note) queryClient.setQueryData(notesKeys.detail(note.id), note)
+      queryClient.setQueryData(notesKeys.detail(note.id), note)
     },
   })
 }
@@ -42,13 +42,13 @@ export function useUpdateNote(id: string) {
 
   return useMutation({
     mutationFn: (payload: UpdateNotePayload) => updateNoteRequest(id, payload),
-    onSuccess: (_data, payload) => {
+    onSuccess: (saved, payload) => {
       const patch: Partial<Note> = {
         title: payload.titulo,
         content: payload.contenido,
         locked: payload.bloqueado,
         pinned: payload.fijado,
-        updatedAt: new Date().toISOString(),
+        updatedAt: saved.updatedAt || new Date().toISOString(),
       }
 
       queryClient.setQueryData<Note>(notesKeys.detail(id), (current) =>

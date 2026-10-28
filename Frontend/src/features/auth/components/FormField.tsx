@@ -13,6 +13,7 @@ interface FormFieldProps {
   onBlur?: () => void
   error?: string
   autoComplete?: string
+  maxLength?: number
   icon: ReactNode
 }
 
@@ -29,6 +30,7 @@ export function FormField({
   onBlur,
   error,
   autoComplete,
+  maxLength,
   icon,
 }: FormFieldProps) {
   const [focused, setFocused] = useState(false)
@@ -46,6 +48,7 @@ export function FormField({
           type={isPassword && !revealed ? 'password' : type}
           value={value}
           autoComplete={autoComplete}
+          maxLength={maxLength}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
           onChange={(event) => onChange(event.target.value)}

@@ -29,10 +29,11 @@ function validate(values: LoginCredentials): LoginErrors {
  * cuentas): el backend responde 500 con credenciales inválidas, así que ambos
  * casos se muestran igual.
  */
-function loginErrorMessage(error: unknown): string {
+function loginErrorMessage(error: Error | null): string {
   const appError = getAppError(error)
 
   if (appError.kind === 'network') return appError.message
+  if (appError.status === 404) return 'Verifica tu correo antes de iniciar sesión.'
   if (appError.kind === 'auth' || appError.status === 500) return 'Correo o contraseña incorrectos.'
 
   return appError.message
@@ -91,7 +92,7 @@ export function useLoginForm() {
         return true
       } catch (error) {
         setStatus('idle')
-        toast.error(loginErrorMessage(error))
+        toast.error(loginErrorMessage(error instanceof Error ? error : null))
         return false
       }
     },

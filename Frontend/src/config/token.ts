@@ -15,7 +15,12 @@ const TOKEN_KEY = 'nottia-token'
 interface JwtPayload {
   exp?: number
   sub?: string
-  [claim: string]: unknown
+  id_usuario?: string
+  nombre?: string
+  email?: string
+  role?: string
+  urlAvatar?: string
+  phone?: string
 }
 
 export function getToken(): string | null {
@@ -84,7 +89,8 @@ export interface CurrentUser {
  */
 export function getCurrentUser(): CurrentUser {
   const payload = getTokenPayload()
-  const asString = (value: unknown) => (typeof value === 'string' && value.length > 0 ? value : null)
+  const asString = (value: string | null | undefined) =>
+    typeof value === 'string' && value.length > 0 ? value : null
 
   return {
     id: asString(payload?.id_usuario),

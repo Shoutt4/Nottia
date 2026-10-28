@@ -18,9 +18,18 @@ export function useIsAuthenticated(): boolean {
     const sync = () => setAuthenticated(isAuthenticated())
     window.addEventListener('nottia:unauthorized', sync)
     window.addEventListener('storage', sync)
+    window.addEventListener('focus', sync)
+    document.addEventListener('visibilitychange', sync)
+    // Revisa la expiración aunque la pestaña siga abierta: así el usuario va al
+    // login al volver, en vez de recibir un 401 al pulsar "Nueva nota".
+    const timer = window.setInterval(sync, 60_000)
+
     return () => {
       window.removeEventListener('nottia:unauthorized', sync)
       window.removeEventListener('storage', sync)
+      window.removeEventListener('focus', sync)
+      document.removeEventListener('visibilitychange', sync)
+      window.clearInterval(timer)
     }
   }, [])
 
