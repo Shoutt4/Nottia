@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.dtos.cuaderno.CuadernoRequestDTO;
 import com.example.backend.dtos.cuaderno.CuadernoResponseDTO;
+import com.example.backend.entity.Cuaderno;
+import com.example.backend.entity.Usuario;
 import com.example.backend.exception.ErrorGlobal;
 import com.example.backend.mapper.cuaderno.CuadernoResponseMapper;
+import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.repository.cuaderno.CuadernoRepository;
 import com.example.backend.security.JwtService;
 
@@ -16,12 +19,14 @@ public class CuadernoService {
     private final CuadernoResponseMapper cuadernoResponseMapper;
     private final CuadernoRepository cuadernoRepository;
     private final JwtService jwtService;
+    private AuthRepository authRepository;
 
     public CuadernoService(CuadernoRepository cuadernoRepository,
-            CuadernoResponseMapper cuadernoResponseMapper, JwtService jwtService) {
+            CuadernoResponseMapper cuadernoResponseMapper, JwtService jwtService, AuthRepository authRepository) {
         this.cuadernoRepository = cuadernoRepository;
         this.cuadernoResponseMapper = cuadernoResponseMapper;
         this.jwtService = jwtService;
+        this.authRepository = authRepository;
     }
 
     public CuadernoResponseDTO getCuaderno(String idCuaderno, String token) {
@@ -45,7 +50,26 @@ public class CuadernoService {
     }
 
     public CuadernoResponseDTO saveCuaderno(CuadernoRequestDTO requestDTO) {
-        return this.cuadernoResponseMapper.toResponseCuaderno(this.cuadernoResponseMapper.saveCuaderno(requestDTO));
+        Usuario usuario = this.authRepository.findById(requestDTO.getIdUsuario())
+                .orElseThrow(() -> new IllegalStateException("error el usuario no existe"));
+        Cuaderno cuaderno = this.cuadernoResponseMapper.saveCuaderno(requestDTO);
+        cuaderno.setIdUsuario(usuario);
+        return this.cuadernoResponseMapper.toResponseCuaderno(this.cuadernoRepository.save(cuaderno));
+    }
+
+    public CuadernoResponseDTO updateCuaderno(String idCuaderno, String token, CuadernoRequestDTO cuadernoRequestDTO) {
+        String idUsusario = this.jwtService.getIdUsuario(token);
+
+        if (this.cuadernoRepository.existsByIdCuaderAndIdUsuario_IdUsuario(idCuaderno, idUsusario)) {
+            if (!this.authRepository.existsById(cuadernoRequestDTO.getIdUsuario())) {
+                throw new IllegalStateException("el usuario no existe");
+            }
+            Cuaderno cuaderno = this.cuadernoRepository.findByIdCuaderAndIdUsuario_IdUsuario(idCuaderno, idUsusario);
+            this.cuadernoResponseMapper.updateCuadernoMap(cuadernoRequestDTO, cuaderno);
+            return this.cuadernoResponseMapper.toResponseCuaderno(this.cuadernoRepository.save(cuaderno));
+        } else {
+            throw new ErrorGlobal("cuaderno no existe con esas eespecificaciones", 404, false);
+        }
     }
 
 }

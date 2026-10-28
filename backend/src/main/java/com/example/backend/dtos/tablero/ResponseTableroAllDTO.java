@@ -2,7 +2,6 @@ package com.example.backend.dtos.tablero;
 
 import java.security.Timestamp;
 
-import com.example.backend.entity.Usuario;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
