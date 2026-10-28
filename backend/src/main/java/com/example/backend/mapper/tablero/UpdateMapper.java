@@ -2,6 +2,7 @@ package com.example.backend.mapper.tablero;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.example.backend.dtos.tablero.RequestTableroAllDTO;
@@ -15,5 +16,5 @@ public interface UpdateMapper {
     @Mapping(target = "idUsuario", ignore = true)
     @Mapping(target = "idTablero", ignore = true)
 
-    Tablero updateTablero(RequestTableroAllDTO requestTableroAllDTO);
+    Tablero updateTablero(RequestTableroAllDTO requestTableroAllDTO, @MappingTarget Tablero tablero);
 }

@@ -39,7 +39,7 @@ public class CuadernoController {
     }
 
     @PreAuthorize("hasRole('USUARIO')")
-    @GetMapping("/byUser/{id}")
+    @GetMapping("/detaills/{id}")
 
     public ResponseEntity<CuadernoResponseDTO> getByUser(@Valid @RequestHeader("Authorization") String token,
             @PathVariable String id) {

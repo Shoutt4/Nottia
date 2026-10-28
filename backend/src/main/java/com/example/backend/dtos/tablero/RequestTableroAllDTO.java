@@ -1,6 +1,5 @@
 package com.example.backend.dtos.tablero;
 
-import com.example.backend.entity.Usuario;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RequestTableroAllDTO {
-    private Usuario idUsuario;
+    private String idUsuario;
     private String titulo;
     private String tipoPortada;
     private String portadaValor;

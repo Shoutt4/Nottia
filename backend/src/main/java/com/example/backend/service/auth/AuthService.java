@@ -1,5 +1,6 @@
 package com.example.backend.service.auth;
 
+import com.example.backend.service.tablero.TableroService;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,28 +15,35 @@ import com.example.backend.dtos.auth.AuthRequestDTO;
 import com.example.backend.dtos.auth.LoginRequetDTO;
 import com.example.backend.dtos.auth.Role;
 import com.example.backend.dtos.auth.TokenResponseDTO;
+import com.example.backend.entity.Tablero;
 import com.example.backend.entity.Usuario;
 import com.example.backend.exception.auth.authExceotion;
 import com.example.backend.repository.auth.AuthRepository;
+import com.example.backend.repository.tablero.TableroRepository;
 import com.example.backend.security.JwtService;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class AuthService {
+    private final TableroService tableroService;
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private EmailVerificationTokenService emailVerificationTokenService;
+    private TableroRepository tableroRepository;
 
     public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
-            AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService) {
+            AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService,
+            TableroRepository tableroRepository, TableroService tableroService) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.emailVerificationTokenService = emailVerificationTokenService;
+        this.tableroRepository = tableroRepository;
+        this.tableroService = tableroService;
     }
 
     public Usuario convertirUsuarioRequest(AuthRequestDTO requestDTO) {
@@ -51,8 +59,10 @@ public class AuthService {
         if (!this.authRepository.existsByEmail(requestDTO.getEmail())) {
             Usuario usuario = this.authRepository.save(convertirUsuarioRequest(requestDTO));
             this.emailVerificationTokenService.enviarEmailVerification(usuario);
-
-            return (Map.of("suces", true, "message", "usuario creado correctamente revisa tu correo para  verifica tu cuenta"));
+            Tablero tablero = Tablero.builder().idUsuario(usuario).titulo(requestDTO.getNombre()).build();
+            this.tableroRepository.save(tablero);
+            return (Map.of("suces", true, "message",
+                    "usuario creado correctamente revisa tu correo para  verifica tu cuenta"));
 
         } else {
             throw new authExceotion("El correo ya esta registrado", 409, false);

@@ -48,7 +48,7 @@ public class TableroService {
         String idUser = this.jwtService.getIdUsuario(token);
         if (this.tableroRepository.existsByIdUsuario_IdUsuario(idUser)) {
             Tablero tablero = this.tableroRepository.findByIdUsuario_IdUsuario(idUser);
-            this.updateMapper.updateTablero(requestTableroAllDTO);
+            this.updateMapper.updateTablero(requestTableroAllDTO, tablero);
             return Map.of("succes", true, "data", convertirTablero(this.tableroRepository.save(tablero)));
         } else {
             throw new ErrorGlobal("NO EXISTE TABLERO PARA ESTE USUARIO", 404, false);
