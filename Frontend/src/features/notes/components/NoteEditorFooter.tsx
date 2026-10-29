@@ -18,7 +18,7 @@ interface NoteEditorFooterProps {
 /** Pie del editor: adjuntos y guardado manual con su estado. */
 export function NoteEditorFooter({ saveState, onSave }: NoteEditorFooterProps) {
   return (
-    <footer className="flex shrink-0 items-center gap-1 border-t border-line px-2 py-2 sm:px-3">
+    <footer className="flex shrink-0 items-center gap-1 border-t border-paper-line bg-paper px-2 py-2 sm:px-3">
       <button
         type="button"
         onClick={soon}
@@ -40,7 +40,7 @@ export function NoteEditorFooter({ saveState, onSave }: NoteEditorFooterProps) {
       <button
         type="button"
         onClick={soon}
-        className="hidden rounded-lg px-2.5 py-1.5 text-xs text-muted transition-colors duration-200 hover:bg-canvas hover:text-ink sm:inline-flex"
+        className="hidden rounded-lg px-2.5 py-1.5 text-xs text-paper-muted transition-colors duration-200 hover:bg-desk hover:text-paper-ink sm:inline-flex"
       >
         Añadir etiqueta
       </button>
@@ -64,7 +64,7 @@ export function NoteEditorFooter({ saveState, onSave }: NoteEditorFooterProps) {
 
       <span
         aria-live="polite"
-        className="inline-flex shrink-0 items-center gap-1.5 pl-2 pr-1 text-xs text-muted"
+        className="inline-flex shrink-0 items-center gap-1.5 pl-2 pr-1 text-xs text-paper-muted"
       >
         {saveState === 'error' ? (
           <>
@@ -78,13 +78,13 @@ export function NoteEditorFooter({ saveState, onSave }: NoteEditorFooterProps) {
           </>
         ) : saveState === 'dirty' ? (
           <>
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            <span className="h-1.5 w-1.5 rounded-full bg-paper-accent" />
             <span className="hidden sm:inline">Cambios sin guardar</span>
             <span className="sm:hidden">Sin guardar</span>
           </>
         ) : (
           <>
-            <CheckIcon className="h-3.5 w-3.5 text-accent-2" />
+            <CheckIcon className="h-3.5 w-3.5 text-paper-accent" />
             <span className="hidden sm:inline">Todos los cambios guardados</span>
             <span className="sm:hidden">Guardado</span>
           </>

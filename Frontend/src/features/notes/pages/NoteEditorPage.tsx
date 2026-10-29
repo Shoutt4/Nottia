@@ -13,8 +13,11 @@ export function NoteEditorPage() {
 
   if (isPending) {
     return (
-      <div className="grid h-full place-items-center bg-canvas text-ink">
-        <LoaderIcon className="h-5 w-5 animate-spin text-muted" aria-label="Cargando nota" />
+      <div className="note-desk grid h-full place-items-center text-paper-ink">
+        <LoaderIcon
+          className="h-5 w-5 animate-spin text-paper-muted"
+          aria-label="Cargando nota"
+        />
       </div>
     )
   }

@@ -56,12 +56,12 @@ export function LoginForm() {
       />
 
       <div className="flex items-center justify-between pt-1 text-sm">
-        <label className="flex cursor-pointer select-none items-center gap-2 text-muted">
+        <label className="flex cursor-pointer select-none items-center gap-2 text-paper-muted">
           <input
             type="checkbox"
             checked={values.remember}
             onChange={(event) => setRemember(event.target.checked)}
-            className="h-4 w-4 rounded border-line accent-accent"
+            className="h-4 w-4 rounded border-paper-line accent-accent"
           />
           Recordarme
         </label>

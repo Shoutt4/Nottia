@@ -61,50 +61,62 @@ export function HomePage() {
   }
 
   return (
-    <div>
+    <div className="note-desk -mb-8 pb-10">
       <CoverBanner />
 
-      <div className="mx-auto mt-7 w-full max-w-5xl space-y-10 px-5 sm:px-8">
-        <Reveal>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{boardTitle}</h1>
-              <p className="mt-1 text-pretty text-sm text-muted">
-                Hola{firstName ? `, ${firstName}` : ''} 👋 Aquí verás todas tus notas.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setSettingsOpen(true)}
-              disabled={boardQuery.isPending}
-              aria-label="Editar tablero"
-              title="Editar tablero"
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-muted transition-colors duration-200 hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <PencilIcon className="h-4 w-4" />
-            </button>
-          </div>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <section>
-            <div className="mb-4 flex items-baseline justify-between gap-4">
-              <h2 className="text-sm font-semibold text-ink">Notas</h2>
-              <span className="text-xs text-muted">
-                {total} {total === 1 ? 'nota' : 'notas'}
+      <div className="w-full -mt-10 sm:-mt-16">
+        <div className="note-paper overflow-hidden rounded-[4px] border border-paper-line px-5 py-6 shadow-[0_30px_70px_-42px_rgba(35,28,20,0.55)] sm:px-10 sm:py-9">
+          <Reveal>
+            <div className="flex items-center justify-between gap-4 border-b border-paper-line pb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">
+              <span className="flex items-center gap-2">
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-paper-accent" />
+                Tu espacio
               </span>
+              <span>Inicio</span>
             </div>
 
-            <NotesRail
-              notes={notes}
-              defaultNotebookId={defaultNotebookId}
-              hasMore={notesQuery.hasNextPage}
-              loadingMore={notesQuery.isFetchingNextPage}
-              onLoadMore={loadMore}
-            />
-          </section>
-        </Reveal>
+            <div className="mt-7 flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="break-words font-serif text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-paper-ink sm:text-5xl">
+                  {boardTitle}
+                </h1>
+                <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-paper-muted">
+                  Hola{firstName ? `, ${firstName}` : ''}. Aquí verás todas tus notas.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSettingsOpen(true)}
+                disabled={boardQuery.isPending}
+                aria-label="Editar tablero"
+                title="Editar tablero"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-paper-line text-paper-muted transition-colors duration-200 hover:border-paper-accent hover:text-paper-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <PencilIcon className="h-4 w-4" />
+              </button>
+            </div>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <section className="mt-9 border-t border-paper-line pt-6">
+              <div className="mb-4 flex items-baseline justify-between gap-4">
+                <h2 className="font-serif text-xl font-semibold text-paper-ink">Notas</h2>
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-paper-muted">
+                  {total} {total === 1 ? 'nota' : 'notas'}
+                </span>
+              </div>
+
+              <NotesRail
+                notes={notes}
+                defaultNotebookId={defaultNotebookId}
+                hasMore={notesQuery.hasNextPage}
+                loadingMore={notesQuery.isFetchingNextPage}
+                onLoadMore={loadMore}
+              />
+            </section>
+          </Reveal>
+        </div>
       </div>
 
       {settingsOpen && (

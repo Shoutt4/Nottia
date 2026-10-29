@@ -16,10 +16,10 @@ import { fileToCover } from '../lib/image'
 import { CoverSurface } from './CoverSurface'
 
 const ICON_BUTTON_CLASS =
-  'grid h-8 w-8 place-items-center rounded-lg text-muted transition-colors duration-200 hover:bg-canvas hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+  'grid h-8 w-8 place-items-center rounded-md text-paper-muted transition-colors duration-200 hover:bg-desk/50 hover:text-paper-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 
 const SOFT_BUTTON_CLASS =
-  'inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium text-ink transition-colors duration-200 hover:border-accent/50 hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60'
+  'inline-flex items-center gap-1.5 rounded-full border border-paper-line px-3.5 py-1.5 text-xs font-medium text-paper-ink transition-colors duration-200 hover:border-paper-accent/50 hover:bg-paper-accent/10 hover:text-paper-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60'
 
 /** Panel "Editar tablero": título, portada (imagen o preset) y alto de la cabecera. */
 export function BoardSettingsDialog({
@@ -121,38 +121,38 @@ export function BoardSettingsDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="board-settings-title"
-        className="max-h-[92dvh] w-full animate-rise overflow-y-auto rounded-t-3xl border border-line bg-surface p-5 shadow-2xl sm:max-w-lg sm:rounded-3xl sm:p-6"
+        className="note-paper max-h-[92dvh] w-full animate-rise overflow-y-auto rounded-t-[6px] border border-paper-line p-5 shadow-2xl sm:max-w-lg sm:rounded-[6px] sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 id="board-settings-title" className="text-base font-semibold text-ink">
+            <h2 id="board-settings-title" className="font-serif text-xl font-semibold text-paper-ink">
               Editar tablero
             </h2>
-            <p className="mt-0.5 text-xs text-muted">Ajusta la portada y el aspecto del inicio.</p>
+            <p className="mt-1 text-xs text-paper-muted">Ajusta la portada y el aspecto del inicio.</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Cerrar" className={ICON_BUTTON_CLASS}>
             <XIcon className="h-4 w-4" />
           </button>
         </div>
 
-        <CoverSurface cover={cover} className="mt-5 aspect-[16/6] rounded-2xl border border-line" />
+        <CoverSurface cover={cover} className="mt-5 aspect-[16/6] rounded-[4px] border border-paper-line" />
 
         <section className="mt-5">
           <label className="block">
-            <span className="text-xs font-semibold text-ink">Título del tablero</span>
+            <span className="text-xs font-semibold text-paper-ink">Título del tablero</span>
             <input
               type="text"
               value={titulo}
               onChange={(event) => setTitulo(event.target.value)}
               placeholder="Mi tablero"
               maxLength={80}
-              className="mt-2 w-full rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/25"
+              className="mt-2 w-full rounded-md border border-paper-line bg-desk/40 px-3.5 py-2.5 text-sm text-paper-ink outline-none transition-colors duration-200 placeholder:text-paper-muted/60 focus:border-paper-accent focus:ring-2 focus:ring-paper-accent/20"
             />
           </label>
         </section>
 
         <section className="mt-5">
-          <h3 className="text-xs font-semibold text-ink">Portada</h3>
+          <h3 className="text-xs font-semibold text-paper-ink">Portada</h3>
 
           <div className="mt-2 flex flex-wrap gap-2">
             <button
@@ -184,10 +184,10 @@ export function BoardSettingsDialog({
                   onClick={() => setCover(preset.value)}
                   aria-pressed={selected}
                   className={cn(
-                    'group relative overflow-hidden rounded-xl border text-left transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                    'group relative overflow-hidden rounded-[4px] border text-left transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                     selected
-                      ? 'border-accent ring-2 ring-accent/25'
-                      : 'border-line hover:border-accent/40',
+                      ? 'border-paper-accent ring-2 ring-paper-accent/20'
+                      : 'border-paper-line hover:border-paper-accent/40',
                   )}
                 >
                   <span
@@ -198,14 +198,14 @@ export function BoardSettingsDialog({
                   <span
                     className={cn(
                       'block px-2 py-1.5 text-[11px] font-medium',
-                      selected ? 'text-accent' : 'text-muted',
+                      selected ? 'text-paper-accent' : 'text-paper-muted',
                     )}
                   >
                     {preset.label}
                   </span>
 
                   {selected && (
-                    <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-full bg-surface text-accent shadow-sm">
+                    <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-full bg-paper text-paper-accent shadow-sm">
                       <CheckIcon className="h-3 w-3" />
                     </span>
                   )}
@@ -214,11 +214,11 @@ export function BoardSettingsDialog({
             })}
           </div>
 
-          <p className="mt-2 text-[11px] text-muted">JPG o PNG · la imagen se optimiza al subirla.</p>
+          <p className="mt-2 text-[11px] text-paper-muted">JPG o PNG · la imagen se optimiza al subirla.</p>
         </section>
 
         <section className="mt-5">
-          <h3 className="text-xs font-semibold text-ink">Alto de la portada</h3>
+          <h3 className="text-xs font-semibold text-paper-ink">Alto de la portada</h3>
 
           <div className="mt-2 grid grid-cols-3 gap-2">
             {COVER_HEIGHTS.map((option) => {
@@ -231,13 +231,13 @@ export function BoardSettingsDialog({
                   onClick={() => setHeight(option.id)}
                   aria-pressed={selected}
                   className={cn(
-                    'flex flex-col items-center gap-1.5 rounded-xl border px-2 py-2 text-[11px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                    'flex flex-col items-center gap-1.5 rounded-md border px-2 py-2 text-[11px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                     selected
-                      ? 'border-accent bg-accent-soft text-accent'
-                      : 'border-line text-muted hover:border-accent/40 hover:text-ink',
+                      ? 'border-paper-accent bg-paper-accent/10 text-paper-accent'
+                      : 'border-paper-line text-paper-muted hover:border-paper-accent/40 hover:text-paper-ink',
                   )}
                 >
-                  <span className={cn('w-full rounded bg-accent/30', option.bar)} />
+                  <span className={cn('w-full rounded bg-paper-accent/30', option.bar)} />
                   {option.label}
                 </button>
               )
@@ -245,11 +245,11 @@ export function BoardSettingsDialog({
           </div>
         </section>
 
-        <div className="mt-6 flex items-center justify-between gap-3 border-t border-line pt-4">
+        <div className="mt-6 flex items-center justify-between gap-3 border-t border-paper-line pt-4">
           <button
             type="button"
             onClick={reset}
-            className="rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors duration-200 hover:bg-canvas hover:text-danger"
+            className="rounded-md px-2 py-1.5 text-xs font-medium text-paper-muted transition-colors duration-200 hover:bg-desk/50 hover:text-danger"
           >
             Restablecer
           </button>

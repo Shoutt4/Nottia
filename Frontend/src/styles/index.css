@@ -22,6 +22,14 @@
   --color-danger-soft: #fbeaea;
   --color-on-danger: #ffffff;
 
+  /* Papel de notas: hoja, tinta y mesa del editor. */
+  --color-paper: #fbf8f0;
+  --color-paper-ink: #29251e;
+  --color-paper-muted: #8b8170;
+  --color-paper-line: #e4dccb;
+  --color-paper-accent: #b45a39;
+  --color-desk: #e9e2d4;
+
   /* Acentos secundarios: solo para detalles de la landing (glows, tarjetas). */
   --color-accent-2: #3f9e8f;
   --color-accent-3: #c98a2b;
@@ -92,6 +100,13 @@
   --color-on-danger: #2a1416;
   --color-accent-2: #6fd0c2;
   --color-accent-3: #e6b667;
+
+  --color-paper: #201d29;
+  --color-paper-ink: #f3eee4;
+  --color-paper-muted: #a79e8f;
+  --color-paper-line: #35303e;
+  --color-paper-accent: #d08a68;
+  --color-desk: #100e18;
 }
 
 @layer base {
@@ -111,6 +126,12 @@
     background-color: var(--color-canvas);
     color: var(--color-ink);
   }
+}
+
+/* Scroll fino y discreto para paneles internos (diseñador, listas). */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
 }
 
 /* Fondo "aurora" como gradientes estáticos: mismo efecto que manchas con
@@ -133,6 +154,25 @@
         color-mix(in oklab, var(--color-accent-3) 18%, transparent),
         transparent 60%
       );
+  }
+
+  /* Mesa y hoja del editor de notas. */
+  .note-desk {
+    background-color: var(--color-desk);
+    background-image: radial-gradient(
+      90% 70% at 50% 0%,
+      color-mix(in srgb, var(--color-paper) 35%, transparent),
+      transparent 70%
+    );
+  }
+
+  .note-paper {
+    background-color: var(--color-paper);
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--color-paper-ink) 4%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 18px 18px;
   }
 }
 

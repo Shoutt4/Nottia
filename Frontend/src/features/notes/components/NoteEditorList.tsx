@@ -28,10 +28,12 @@ export function NoteEditorList({
   const empty = !isPending && groups.length === 0
 
   return (
-    <aside className="hidden w-80 shrink-0 flex-col border-r border-line bg-canvas lg:flex">
-      <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-4">
-        <h1 className="min-w-0 truncate text-sm font-semibold">{notebook}</h1>
-        <span className="shrink-0 text-xs text-muted">{total}</span>
+    <aside className="hidden w-80 shrink-0 flex-col border-r border-paper-line bg-desk lg:flex">
+      <div className="flex h-14 shrink-0 items-center gap-2 border-b border-paper-line px-4">
+        <h1 className="min-w-0 truncate font-serif text-[15px] font-semibold text-paper-ink">
+          {notebook}
+        </h1>
+        <span className="shrink-0 font-mono text-[10px] text-paper-muted">{total}</span>
 
         <div className="ml-auto flex shrink-0 items-center">
           <button
@@ -78,10 +80,12 @@ export function NoteEditorList({
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-2 py-2">
+      <nav className="scroll-slim flex-1 overflow-y-auto px-2 py-2">
         {groups.map((group) => (
           <div key={group.label} className="pb-1.5">
-            <h2 className="px-3 pb-1 pt-2 text-[11px] font-medium text-muted">{group.label}</h2>
+            <h2 className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-muted">
+              {group.label}
+            </h2>
 
             <div className="space-y-0.5">
               {group.notes.map((item) => (
@@ -91,7 +95,7 @@ export function NoteEditorList({
           </div>
         ))}
 
-        {empty && <p className="px-3 py-4 text-xs text-muted">Aún no tienes notas.</p>}
+        {empty && <p className="px-3 py-4 text-xs text-paper-muted">Aún no tienes notas.</p>}
       </nav>
     </aside>
   )

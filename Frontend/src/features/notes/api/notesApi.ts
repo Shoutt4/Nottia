@@ -14,7 +14,6 @@ import type {
 
 const NOTEBOOK_LABEL = 'Notas'
 
-/** Traduce `NotasResponse` (backend) al modelo de la interfaz. */
 function toNote(dto: NotaResponse): Note {
   return {
     id: dto.idNota,
@@ -22,7 +21,6 @@ function toNote(dto: NotaResponse): Note {
     notebook: NOTEBOOK_LABEL,
     title: dto.titulo ?? '',
     content: dto.contenido ?? '',
-    // El backend todavía no rellena las fechas de la nota.
     updatedAt: dto.updateAt ?? dto.createAt ?? '',
     locked: dto.bloqueado,
     pinned: dto.fijado,
@@ -54,7 +52,7 @@ export async function fetchNote(id: string): Promise<Note> {
  */
 export async function fetchNotes(page = 0, size = 20): Promise<NotePage> {
   try {
-    const { data } = await http.get<PageResponse<NotaResponse>>('/api/notas/all', {
+    const { data } = await http.get<PageResponse<NotaResponse>>('/api/notas/favortie', {
       params: { page, size },
     })
 

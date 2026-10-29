@@ -1,122 +1,132 @@
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-import { Button } from '@/components/ui/Button'
-import { NotebookIcon, PencilIcon, PlusIcon } from '@/components/ui/icons'
+import { PlusIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/ui/Reveal'
-import { getErrorMessage } from '@/lib/errors'
+import { buttonClass } from '@/components/ui/buttonStyles'
+import { ROUTES } from '@/config/routes'
+import type { CoverDesign } from '@/stores/notebookCoverStore'
 
-import { NotebookDialog } from '../components/NotebookDialog'
-import { useNotebooks } from '../hooks/useNotebooks'
-import { notebookColor } from '../lib/colors'
-import type { Notebook } from '../types'
+import { NotebookCover } from '../components/NotebookCover'
 
-/** Tarjeta de un cuaderno con acceso a edición. */
-function NotebookCard({ notebook, onEdit }: { notebook: Notebook; onEdit: () => void }) {
-  const accent = notebookColor(notebook.color)
-
-  return (
-    <article className="group flex h-full flex-col rounded-2xl border border-line bg-surface p-4 transition duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_18px_40px_-30px_var(--color-accent)]">
-      <div className="flex items-start justify-between gap-3">
-        <span
-          className="grid h-10 w-10 place-items-center rounded-xl"
-          style={{ backgroundColor: `${accent}1f`, color: accent }}
-        >
-          <NotebookIcon className="h-5 w-5" />
-        </span>
-
-        <button
-          type="button"
-          onClick={onEdit}
-          aria-label={`Editar ${notebook.nombre}`}
-          title="Editar cuaderno"
-          className="grid h-8 w-8 place-items-center rounded-lg text-muted transition-colors duration-200 hover:bg-canvas hover:text-ink"
-        >
-          <PencilIcon className="h-4 w-4" />
-        </button>
-      </div>
-
-      <h2 className="mt-3 truncate text-sm font-semibold text-ink">{notebook.nombre}</h2>
-      <p className="mt-1 text-xs text-muted">Orden {notebook.orden}</p>
-    </article>
-  )
+interface ExampleNotebook {
+  title: string
+  order: number
+  author: string
+  design: CoverDesign
 }
 
-/** Biblioteca de cuadernos: lista, crea y edita (`/api/cuaderno/...`). */
+const AUTHOR = 'Richard Collao'
+
+/** Portadas de ejemplo mientras el listado se conecta a los datos reales. */
+const EXAMPLE_NOTEBOOKS: ExampleNotebook[] = [
+  {
+    title: 'A contraluz',
+    order: 1,
+    author: AUTHOR,
+    design: { template: 'nocturno', color: '#5b8def', accent: '#f0b64a', image: null },
+  },
+  {
+    title: 'Diario de viaje',
+    order: 2,
+    author: AUTHOR,
+    design: { template: 'papel', color: '#4caf82', accent: '#b4552d', image: null },
+  },
+  {
+    title: 'Cuaderno de ideas',
+    order: 3,
+    author: AUTHOR,
+    design: { template: 'solar', color: '#e8b04b', accent: '#d3442e', image: null },
+  },
+  {
+    title: 'Notas de campo',
+    order: 4,
+    author: AUTHOR,
+    design: { template: 'lavanda', color: '#9a86c8', accent: '#6b4de6', image: null },
+  },
+  {
+    title: 'Cartas al futuro',
+    order: 5,
+    author: AUTHOR,
+    design: { template: 'minimal', color: '#3f9e8f', accent: '#22201c', image: null },
+  },
+  {
+    title: 'Agenda de otoño',
+    order: 6,
+    author: AUTHOR,
+    design: { template: 'solar', color: '#d97757', accent: '#f3d6a0', image: null },
+  },
+]
+
+/**
+ * Colección de cuadernos. Por ahora es una vista estática: varias tapas de
+ * ejemplo, sin títulos ni metadatos debajo, y el acceso para crear una nueva.
+ */
 export function NotebooksPage() {
-  const { data, isPending, isError, error } = useNotebooks()
-  const [open, setOpen] = useState(false)
-  const [editing, setEditing] = useState<Notebook | null>(null)
-
-  const notebooks = data?.notebooks ?? []
-
-  const openCreate = () => {
-    setEditing(null)
-    setOpen(true)
-  }
-
-  const openEdit = (notebook: Notebook) => {
-    setEditing(notebook)
-    setOpen(true)
-  }
-
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 px-5 sm:px-8">
+    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
       <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-medium text-muted">Biblioteca</p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Tus cuadernos</h1>
-            <p className="mt-1 text-sm text-muted">
-              Organiza tus notas por temas, proyectos o materias.
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+              Tu colección
             </p>
+            <h1
+              className="mt-3 text-5xl font-semibold leading-[0.95] tracking-[-0.03em] text-ink sm:text-6xl"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              Mis cuadernos
+            </h1>
           </div>
 
-          <Button onClick={openCreate}>
-            <PlusIcon className="h-4 w-4" />
-            Nuevo cuaderno
-          </Button>
+          <p className="max-w-xs text-sm leading-relaxed text-muted lg:pb-2 lg:text-right">
+            Las tapas de tus cuadernos, reunidas en un solo lugar.
+          </p>
         </div>
+
+        <div className="mt-8 border-t border-line" />
       </Reveal>
 
-      {isPending ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }, (_, index) => (
-            <div
-              key={index}
-              className="h-32 animate-pulse rounded-2xl border border-line bg-surface"
-            />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className="rounded-3xl border border-line bg-surface px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-ink">No pudimos cargar tus cuadernos</p>
-          <p className="mx-auto mt-1.5 max-w-sm text-pretty text-sm text-muted">
-            {getErrorMessage(error)}
+      <Reveal className="mt-8" delay={80}>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+            {EXAMPLE_NOTEBOOKS.length} cuadernos
           </p>
-        </div>
-      ) : notebooks.length === 0 ? (
-        <div className="rounded-3xl border border-line bg-surface px-6 py-14 text-center">
-          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-accent-soft text-accent">
-            <NotebookIcon className="h-6 w-6" />
-          </span>
-          <p className="mt-4 text-sm font-semibold text-ink">Todavía no tienes cuadernos</p>
-          <p className="mx-auto mt-1.5 max-w-sm text-pretty text-sm text-muted">
-            Crea el primero para separar tus notas por tema.
-          </p>
-          <Button onClick={openCreate} className="mt-5">
-            <PlusIcon className="h-4 w-4" />
-            Crear cuaderno
-          </Button>
-        </div>
-      ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {notebooks.map((notebook) => (
-            <NotebookCard key={notebook.id} notebook={notebook} onEdit={() => openEdit(notebook)} />
-          ))}
-        </div>
-      )}
 
-      {open && <NotebookDialog notebook={editing ?? undefined} onClose={() => setOpen(false)} />}
+          <Link
+            to={ROUTES.notebookNew}
+            className={buttonClass('primary', 'group shrink-0 whitespace-nowrap')}
+          >
+            <PlusIcon className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
+            Crear cuaderno
+          </Link>
+        </div>
+
+        <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3">
+          {EXAMPLE_NOTEBOOKS.map((notebook) => (
+            <li key={notebook.order} className="min-w-0">
+              <figure className="group">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-l-[3px] rounded-r-xl shadow-[0_24px_48px_-26px_rgba(24,18,40,0.5)] transition duration-500 group-hover:-translate-y-1.5 group-hover:shadow-[0_36px_64px_-30px_rgba(24,18,40,0.55)]">
+                  <NotebookCover
+                    title={notebook.title}
+                    order={notebook.order}
+                    author={notebook.author}
+                    design={notebook.design}
+                  />
+
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 left-0 w-[5%] bg-gradient-to-r from-black/25 to-transparent"
+                  />
+                </div>
+
+                <figcaption className="sr-only">
+                  {notebook.title}, cuaderno de {notebook.author}.
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </div>
   )
 }

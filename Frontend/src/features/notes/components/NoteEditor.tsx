@@ -26,7 +26,7 @@ export function NoteEditor({ note }: { note: Note }) {
   const [listOpen, setListOpen] = useState(true)
 
   return (
-    <div className="flex h-full overflow-hidden bg-canvas text-ink">
+    <div className="flex h-full overflow-hidden bg-desk text-paper-ink">
       {listOpen && (
         <NoteEditorList
           notebook={note.notebook}
@@ -39,7 +39,7 @@ export function NoteEditor({ note }: { note: Note }) {
         />
       )}
 
-      <section ref={editorRef} className="flex min-w-0 flex-1 flex-col bg-surface">
+      <section ref={editorRef} className="flex min-w-0 flex-1 flex-col bg-desk">
         <NoteEditorHeader
           note={note}
           title={title}
@@ -53,6 +53,7 @@ export function NoteEditor({ note }: { note: Note }) {
         <NoteEditorBody
           title={title}
           content={content}
+          notebook={note.notebook}
           updatedAt={note.updatedAt}
           onTitleChange={handleTitle}
           onContentChange={handleContent}

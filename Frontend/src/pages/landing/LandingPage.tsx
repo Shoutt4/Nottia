@@ -5,10 +5,10 @@ import { Hero } from './Hero'
 import { Navbar } from './Navbar'
 import { Showcase } from './Showcase'
 
-/** Landing pública de Nottia (ruta `/`). */
+/** Landing pública de Nottia (ruta `/`): portada de cuaderno + páginas. */
 export function LandingPage() {
   return (
-    <div className="min-h-dvh bg-canvas text-ink">
+    <div className="note-desk min-h-dvh text-ink">
       <Navbar />
       <main>
         <Hero />

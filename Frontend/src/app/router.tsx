@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { ROUTES } from '@/config/routes'
 import { LoginPage, RegisterPage, VerifyEmailPage } from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
-import { NotebooksPage } from '@/features/notebooks'
+import { NotebookDesignerPage, NotebooksPage } from '@/features/notebooks'
 import { NoteEditorPage } from '@/features/notes'
 import { ProfilePage } from '@/features/profile'
 import { SidebarLayout } from '@/features/sidebar'
@@ -40,6 +40,8 @@ export const router = createBrowserRouter([
         children: [
           { path: ROUTES.dashboard, element: <HomePage /> },
           { path: ROUTES.notebooks, element: <NotebooksPage /> },
+          { path: ROUTES.notebookNew, element: <NotebookDesignerPage /> },
+          { path: `${ROUTES.notebooks}/:notebookId/editar`, element: <NotebookDesignerPage /> },
           { path: ROUTES.profile, element: <ProfilePage /> },
           // El editor vive dentro del shell (menú visible) y ocupa el alto disponible.
           { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },

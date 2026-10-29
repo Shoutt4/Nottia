@@ -29,8 +29,10 @@ export function RegisterForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight">Crea tu cuenta</h1>
-      <p className="mt-1.5 text-sm text-muted">Gratis. Solo necesitas un correo.</p>
+      <h1 className="font-serif text-3xl font-semibold tracking-[-0.02em] text-paper-ink">
+        Crea tu cuenta
+      </h1>
+      <p className="mt-2 text-sm text-paper-muted">Gratis. Solo necesitas un correo.</p>
 
       <form ref={ref} onSubmit={onSubmit} noValidate className="mt-7 space-y-4">
         <FormField
@@ -97,7 +99,7 @@ export function RegisterForm() {
         {formError && (
           <p
             role="alert"
-            className="rounded-xl border border-danger/30 bg-danger-soft px-3.5 py-2.5 text-xs font-medium text-danger"
+            className="rounded-md border border-danger/30 bg-danger-soft px-3.5 py-2.5 text-xs font-medium text-danger"
           >
             {formError}
           </p>
@@ -121,7 +123,7 @@ export function RegisterForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted">
+      <p className="mt-7 text-center text-sm text-paper-muted">
         ¿Ya tienes cuenta?{' '}
         <Link
           to={ROUTES.login}

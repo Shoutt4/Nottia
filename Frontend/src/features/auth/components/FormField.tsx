@@ -58,18 +58,18 @@ export function FormField({
             onBlur?.()
           }}
           className={cn(
-            'h-14 w-full rounded-xl border bg-canvas/60 pb-1.5 pl-11 pt-5 text-sm text-ink outline-none transition-all duration-200',
+            'h-14 w-full rounded-md border bg-desk/40 pb-1.5 pl-11 pt-5 text-sm text-paper-ink outline-none transition-all duration-200',
             isPassword ? 'pr-11' : 'pr-4',
             error
               ? 'border-danger focus:border-danger focus:ring-4 focus:ring-danger/15'
-              : 'border-line focus:border-accent focus:ring-4 focus:ring-accent/15',
+              : 'border-paper-line focus:border-paper-accent focus:ring-4 focus:ring-paper-accent/15',
           )}
         />
 
         <span
           className={cn(
             'pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200',
-            focused ? 'text-accent' : 'text-muted',
+            focused ? 'text-paper-accent' : 'text-paper-muted',
           )}
         >
           {icon}
@@ -80,7 +80,7 @@ export function FormField({
           className={cn(
             'pointer-events-none absolute left-11 origin-left transition-all duration-200',
             floating ? 'top-2 text-[11px] font-medium' : 'top-1/2 -translate-y-1/2 text-sm',
-            error ? 'text-danger' : focused ? 'text-accent' : 'text-muted',
+            error ? 'text-danger' : focused ? 'text-paper-accent' : 'text-paper-muted',
           )}
         >
           {label}
@@ -91,7 +91,7 @@ export function FormField({
             type="button"
             onClick={() => setRevealed((current) => !current)}
             aria-label={revealed ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-paper-muted transition-colors hover:text-paper-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             {revealed ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>

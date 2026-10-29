@@ -24,7 +24,7 @@ const EDGE = 8
 const LOAD_AHEAD = 200
 
 const ARROW_CLASS =
-  'absolute top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-surface/95 text-ink shadow-lg backdrop-blur transition-colors duration-200 hover:border-accent/50 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:grid'
+  'absolute top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-paper-line bg-paper/95 text-paper-ink shadow-lg backdrop-blur transition-colors duration-200 hover:border-paper-accent/50 hover:text-paper-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:grid'
 
 /** Carrusel horizontal de notas con flechas y carga por páginas. */
 export function NotesRail({

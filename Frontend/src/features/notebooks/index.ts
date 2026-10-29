@@ -13,6 +13,7 @@ export {
   useNotebooks,
   useUpdateNotebook,
 } from './hooks/useNotebooks'
+export { NotebookDesignerPage } from './pages/NotebookDesignerPage'
 export { NotebooksPage } from './pages/NotebooksPage'
 export type {
   Notebook,

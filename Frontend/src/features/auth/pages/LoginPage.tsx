@@ -19,12 +19,14 @@ export function LoginPage() {
       description="Inicia sesión para continuar donde lo dejaste: tus notas, listas y recordatorios te esperan."
       perks={perks}
     >
-      <h1 className="text-2xl font-bold tracking-tight">Inicia sesión</h1>
-      <p className="mt-1.5 text-sm text-muted">Bienvenido de vuelta a Nottia.</p>
+      <h1 className="font-serif text-3xl font-semibold tracking-[-0.02em] text-paper-ink">
+        Inicia sesión
+      </h1>
+      <p className="mt-2 text-sm text-paper-muted">Bienvenido de vuelta a Nottia.</p>
 
       <LoginForm />
 
-      <p className="mt-6 text-center text-sm text-muted">
+      <p className="mt-7 text-center text-sm text-paper-muted">
         ¿No tienes cuenta?{' '}
         <Link
           to={ROUTES.register}

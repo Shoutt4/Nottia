@@ -6,11 +6,15 @@ export const ROUTES = {
   verifyEmail: '/verify-email',
   dashboard: '/dashboard',
   notebooks: '/cuadernos',
+  notebookNew: '/cuadernos/nuevo',
   profile: '/perfil',
   notes: '/notas',
 } as const
 
 /** Ruta del editor de una nota concreta. */
 export const notePath = (id: string) => `${ROUTES.notes}/${id}`
+
+/** Ruta del diseñador de portada de un cuaderno. */
+export const notebookEditPath = (id: string) => `${ROUTES.notebooks}/${id}/editar`
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES]

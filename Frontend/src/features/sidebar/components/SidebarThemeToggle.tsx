@@ -23,7 +23,7 @@ export function SidebarThemeToggle({ collapsed }: SidebarThemeToggleProps) {
       aria-label={isDark ? 'Activar modo claro' : 'Activar modo oscuro'}
       title={label}
       className={cn(
-        'group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-canvas hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+        'group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-[13px] font-medium text-paper-muted transition-colors hover:bg-desk/50 hover:text-paper-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-accent',
         collapsed && 'lg:justify-center lg:px-0',
       )}
     >
@@ -42,26 +42,26 @@ export function SidebarThemeToggle({ collapsed }: SidebarThemeToggleProps) {
         />
       </span>
 
-      <span className={cn('flex-1 text-left', collapsed && 'lg:hidden')}>{label}</span>
+      <span className={cn('flex-1 text-left font-serif', collapsed && 'lg:hidden')}>{label}</span>
 
       <span
         aria-hidden
         className={cn(
-          'relative h-5 w-9 shrink-0 rounded-full border border-line transition-colors duration-300',
-          isDark ? 'bg-accent' : 'bg-canvas',
+          'relative h-5 w-9 shrink-0 rounded-full border border-paper-line transition-colors duration-300',
+          isDark ? 'bg-paper-accent' : 'bg-desk',
           collapsed && 'lg:hidden',
         )}
       >
         <span
           className={cn(
-            'absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-surface shadow-sm transition-all duration-300 ease-out motion-reduce:transition-none',
+            'absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-paper shadow-sm transition-all duration-300 ease-out motion-reduce:transition-none',
             isDark && 'translate-x-4',
           )}
         />
       </span>
 
       {collapsed && (
-        <span className="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 text-xs font-medium text-canvas opacity-0 shadow-lg transition-opacity group-hover:opacity-100 lg:block">
+        <span className="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-md border border-paper-line/60 bg-paper-ink px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-paper opacity-0 shadow-lg transition-opacity group-hover:opacity-100 lg:block">
           {label}
         </span>
       )}

@@ -9,7 +9,7 @@ export interface Feature {
   description: string
   action: string
   Icon: ComponentType<IconProps>
-  /** Color del ícono (clase de texto con token Lavanda). */
+  /** Color del ícono (token de papel). */
   iconClass: string
   /** Fondo del recuadro del ícono. */
   tintClass: string
@@ -22,8 +22,8 @@ export const features: Feature[] = [
     description: 'Escribe ideas, apuntes y listas con formato, etiquetas y contraseñas.',
     action: 'Empezar ahora',
     Icon: NoteIcon,
-    iconClass: 'text-accent',
-    tintClass: 'bg-accent-soft',
+    iconClass: 'text-paper-accent',
+    tintClass: 'bg-paper-accent/10',
   },
   {
     id: 'listas',
@@ -31,8 +31,8 @@ export const features: Feature[] = [
     description: 'Convierte cualquier nota en listas interactivas con recordatorios.',
     action: 'Empezar ahora',
     Icon: ListIcon,
-    iconClass: 'text-accent-2',
-    tintClass: 'bg-accent-2/10',
+    iconClass: 'text-paper-accent',
+    tintClass: 'bg-paper-accent/10',
   },
   {
     id: 'mapa',
@@ -40,8 +40,8 @@ export const features: Feature[] = [
     description: 'Guarda lugares y recuérdalos justo donde los necesitas.',
     action: 'Explorar ahora',
     Icon: MapIcon,
-    iconClass: 'text-accent-2',
-    tintClass: 'bg-accent-2/10',
+    iconClass: 'text-paper-accent',
+    tintClass: 'bg-paper-accent/10',
   },
   {
     id: 'kanban',
@@ -49,8 +49,8 @@ export const features: Feature[] = [
     description: 'Organiza el trabajo en tableros y mueve tareas entre columnas.',
     action: 'Explorar ahora',
     Icon: KanbanIcon,
-    iconClass: 'text-danger',
-    tintClass: 'bg-danger-soft',
+    iconClass: 'text-paper-accent',
+    tintClass: 'bg-paper-accent/10',
   },
   {
     id: 'calendario',
@@ -58,7 +58,7 @@ export const features: Feature[] = [
     description: 'Visualiza fechas, eventos y recordatorios de un vistazo.',
     action: 'Explorar ahora',
     Icon: CalendarIcon,
-    iconClass: 'text-accent',
-    tintClass: 'bg-accent-soft',
+    iconClass: 'text-paper-accent',
+    tintClass: 'bg-paper-accent/10',
   },
 ]

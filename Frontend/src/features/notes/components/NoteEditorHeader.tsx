@@ -36,7 +36,7 @@ export function NoteEditorHeader({
   onToggleFullscreen,
 }: NoteEditorHeaderProps) {
   return (
-    <header className="flex h-14 shrink-0 items-center gap-1 border-b border-line px-2 sm:px-3">
+    <header className="flex h-14 shrink-0 items-center gap-1 border-b border-paper-line bg-paper/90 px-2 backdrop-blur-xl sm:px-3">
       {!isFullscreen && (
         <button
           type="button"
@@ -68,17 +68,19 @@ export function NoteEditorHeader({
         )}
       </button>
 
-      <span aria-hidden className="mx-1 h-5 w-px bg-line" />
+      <span aria-hidden className="mx-1 h-5 w-px bg-paper-line" />
 
-      <div className="flex min-w-0 items-center gap-1.5 text-[13px]">
+      <div className="flex min-w-0 items-center gap-2 text-[13px]">
         <Link
           to={ROUTES.dashboard}
-          className="truncate text-muted transition-colors duration-200 hover:text-ink"
+          className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-paper-muted transition-colors duration-200 hover:text-paper-ink"
         >
           {note.notebook}
         </Link>
-        <ChevronRightIcon className="h-3.5 w-3.5 shrink-0 text-muted/60" />
-        <span className="truncate font-medium text-ink">{title.trim() || 'Sin título'}</span>
+        <ChevronRightIcon className="h-3.5 w-3.5 shrink-0 text-paper-muted/60" />
+        <span className="truncate font-serif font-semibold text-paper-ink">
+          {title.trim() || 'Sin título'}
+        </span>
       </div>
 
       <div className="ml-auto flex items-center gap-2">
