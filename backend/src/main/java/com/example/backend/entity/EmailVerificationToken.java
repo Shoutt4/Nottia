@@ -1,10 +1,8 @@
 package com.example.backend.entity;
 
-import java.security.Timestamp;
-import java.sql.Date;
+
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,9 +38,15 @@ public class Cuaderno {
     private Usuario idUsuario;
     @Size(max = 80)
     private String nombre;
+    private String descipcion;
     @Size(max = 20)
     private String color;
     private int orden;
+    private String template;
+    private String coverColor;
+    private String accent;
+    @Column(columnDefinition = "TEXT")
+    private String image;
     @CreationTimestamp
     private Timestamp createAt;
     @UpdateTimestamp

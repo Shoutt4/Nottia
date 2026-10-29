@@ -1,5 +1,6 @@
 package com.example.backend.dtos.cuaderno;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,9 @@ public class CuadernoRequestDTO {
     private String nombre;
     private String color;
     private int orden;
+    private String template;
+    private String coverColor;
+    private String accent;
+    @Column(columnDefinition = "TEXT")
+    private String image;
 }

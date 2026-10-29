@@ -103,4 +103,25 @@ public class NotasService {
         }
     }
 
+    public Page<NotasResponse> getCuadernoByFijado(String token, Pageable page) {
+        String idUsuario = this.jwtService.getIdUsuario(token);
+        if (this.notasRepository.countBy(idUsuario) > 0) {
+            return this.notasRepository
+                    .optenerNotasFijadas(idUsuario,
+                            page)
+                    .map((p) -> this.responseNotas(p));
+        } else {
+            throw new ErrorGlobal("no existe  cuaderno con id : " + idUsuario, 404, false);
+        }
+    }
+
+    public Page<NotasResponse> getAllByCuaderno(String token, String idCuaderno, Pageable page) {
+        String idUsuario = this.jwtService.getIdUsuario(token);
+        if (this.cuadernoRepository.existsByIdCuaderAndIdUsuario_IdUsuario(idCuaderno, idUsuario)) {
+            return this.notasRepository.findAllByCuaderno(idCuaderno, idUsuario, page).map((c) -> responseNotas(c));
+        } else {
+            throw new ErrorGlobal("cuaderno no existente ", 404, false);
+        }
+    }
+
 }

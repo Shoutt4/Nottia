@@ -2,7 +2,6 @@ package com.example.backend.controller.notas;
 
 import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +65,20 @@ public class NotasController {
     @PostMapping("/save")
     public ResponseEntity<Map<String, Object>> saveNota(@Valid @RequestBody SaveNotaRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.saveNota(requestDTO));
+    }
+
+    @PreAuthorize("hasRole('USUARIO')")
+    @GetMapping("/favortie")
+    public ResponseEntity<Page<NotasResponse>> getByFijado(
+            @Valid @RequestHeader("Authorization") String token, Pageable page) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.getCuadernoByFijado(token, page));
+    }
+
+    @PreAuthorize("hasRole('USUARIO')")
+    @GetMapping("/by/cuaderno/{id}")
+    public ResponseEntity<Page<NotasResponse>> getNotaByCuaderno(@Valid @RequestHeader("Authorization") String token,
+            @PathVariable String id, Pageable page) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.getAllByCuaderno(token, id, page));
     }
 
 }
