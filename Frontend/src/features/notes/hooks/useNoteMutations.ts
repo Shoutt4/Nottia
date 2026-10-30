@@ -31,6 +31,7 @@ export function useCreateNote() {
     onSuccess: (note) => {
       queryClient.invalidateQueries({ queryKey: notesKeys.lists() })
       queryClient.invalidateQueries({ queryKey: notesKeys.infinites() })
+      queryClient.invalidateQueries({ queryKey: notesKeys.notebookPages() })
       queryClient.setQueryData(notesKeys.detail(note.id), note)
     },
   })
@@ -56,6 +57,15 @@ export function useUpdateNote(id: string) {
       )
 
       queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.lists() }, (page) =>
+        page
+          ? {
+              ...page,
+              notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
+            }
+          : page,
+      )
+
+      queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.notebookPages() }, (page) =>
         page
           ? {
               ...page,

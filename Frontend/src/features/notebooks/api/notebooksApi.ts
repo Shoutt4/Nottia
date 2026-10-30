@@ -16,6 +16,7 @@ function toNotebook(dto: NotebookResponse): Notebook {
     nombre: dto.nombre,
     color: dto.color,
     orden: dto.orden,
+    design: dto.desing ?? null,
     createdAt: dto.createAt,
     updatedAt: dto.updateAt,
   }
@@ -50,7 +51,7 @@ export async function fetchNotebook(id: string): Promise<Notebook> {
 /** `GET /api/cuaderno/all?page=&size=&sort=`. */
 export async function fetchNotebooks(
   page = 0,
-  size = 20,
+  size = 6,
   sort = 'orden',
 ): Promise<NotebookPage> {
   const { data } = await http.get<PageResponse<NotebookResponse>>('/api/cuaderno/all', {

@@ -13,21 +13,22 @@ import { toast } from '@/lib/toast'
 import { useNotebookCoverStore } from '@/stores/notebookCoverStore'
 import type { CoverDesign, CoverTemplate } from '@/stores/notebookCoverStore'
 
-import { BookPreview } from '../components/BookPreview'
+import { BookPreviewStage } from '../components/BookPreviewStage'
 import { CoverContentFields } from '../components/CoverContentFields'
 import { CoverLookPicker } from '../components/CoverLookPicker'
 import { CoverStylePicker } from '../components/CoverStylePicker'
 import { useCreateNotebook, useNotebook, useUpdateNotebook } from '../hooks/useNotebooks'
 import { notebookColor } from '../lib/colors'
-import { defaultCover, templateInfo } from '../lib/covers'
+import { coverDesignFrom, defaultCover, templateInfo } from '../lib/covers'
 import type { Notebook, NotebookPayload } from '../types'
 
 const FORM_ID = 'notebook-designer-form'
 
 /**
  * Diseñador de cubiertas: pantalla completa con panel de ajustes y vista previa
- * en vivo. El nombre, el color y el orden van a la API; el diseño de la tapa
- * (estilo, acento e imagen) se guarda en el navegador.
+ * en vivo. Al crear, el nombre, el color, el orden y el diseño de la tapa se
+ * envían a la API. Al editar, el detalle del cuaderno carga esos mismos datos;
+ * el diseño se muestra tal como lo devuelve el backend (o la copia local).
  */
 export function NotebookDesignerPage() {
   const { notebookId } = useParams()
@@ -55,7 +56,7 @@ export function NotebookDesignerPage() {
     setNombre(notebook.nombre)
     setColor(notebook.color)
     setOrden(String(notebook.orden))
-    setDesign(storedCovers[notebook.id] ?? defaultCover(notebook))
+    setDesign(storedCovers[notebook.id] ?? coverDesignFrom(notebook.design, notebook.color))
     setHydrated(true)
   }, [notebook, storedCovers])
 
@@ -110,6 +111,17 @@ export function NotebookDesignerPage() {
       nombre: name,
       color,
       orden: orderNumber,
+    }
+
+    // El diseño se guarda al crear. Al editar se conserva el que ya existe en
+    // el backend; el detalle solo se usa para mostrar la información.
+    if (!notebook) {
+      payload.desing = {
+        template: design.template,
+        color: design.color,
+        accent: design.accent,
+        image: design.image,
+      }
     }
 
     const onSuccess = (saved: Notebook) => {
@@ -207,13 +219,14 @@ export function NotebookDesignerPage() {
             />
 
             <p className="text-[11px] leading-relaxed text-muted">
-              El nombre, el color y el orden se guardan en tu cuenta. El estilo, el acento y la
-              imagen de la tapa quedan guardados en este navegador.
+              El nombre, el color y el orden se guardan en tu cuenta. El diseño de la tapa se
+              guarda al crear el cuaderno; al editar, se conserva el diseño existente y una copia
+              local para este navegador.
             </p>
           </form>
         </aside>
 
-        <section className="relative order-1 flex min-h-[360px] flex-1 items-center justify-center overflow-hidden px-6 py-12 lg:order-2 lg:min-h-0">
+        <section className="relative order-1 flex min-h-[360px] items-center justify-center overflow-hidden px-6 py-12 lg:order-2 lg:min-h-0 lg:flex-1">
           <div aria-hidden className="absolute inset-0" style={{ backgroundColor: '#ece8df' }} />
           <div
             aria-hidden
@@ -233,31 +246,25 @@ export function NotebookDesignerPage() {
             }}
           />
 
-          <div className="absolute left-5 top-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#8c8374]">
+          <div className="pointer-events-none absolute left-5 top-4 z-20 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#8c8374]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#c05a3a]" />
             Vista previa
             <span className="text-[#b7ae9f]">· en vivo</span>
           </div>
-          <div className="absolute right-5 top-4 font-mono text-[10px] uppercase tracking-[0.22em] text-[#b7ae9f]">
+          <div className="pointer-events-none absolute right-5 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.22em] text-[#b7ae9f]">
             Nottia
           </div>
 
-          <div className="relative animate-rise">
-            {hydrated ? (
-              <BookPreview
-                title={nombre}
-                order={orderNumber}
-                author={author}
-                design={design}
-              />
-            ) : (
-              <div className="aspect-[3/4] w-[clamp(240px,30vw,380px)] animate-pulse rounded-lg bg-[#e2dccf]" />
-            )}
-          </div>
-
-          <p className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#a59b8b]">
-            3:4 · portada
-          </p>
+          {hydrated ? (
+            <BookPreviewStage
+              title={nombre}
+              order={orderNumber}
+              author={author}
+              design={design}
+            />
+          ) : (
+            <div className="relative aspect-[3/4] w-[clamp(240px,30vw,380px)] animate-pulse rounded-lg bg-[#e2dccf]" />
+          )}
         </section>
       </div>
     </div>

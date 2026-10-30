@@ -1,6 +1,7 @@
 import type { CoverDesign, CoverTemplate } from '@/stores/notebookCoverStore'
 
-import { notebookColor } from './colors'
+import type { NotebookDesignApi } from '../types'
+import { DEFAULT_NOTEBOOK_COLOR, notebookColor, NOTEBOOK_COLORS } from './colors'
 
 /** Metadatos de cada estilo de tapa. */
 export interface CoverTemplateInfo {
@@ -59,6 +60,53 @@ export function defaultCover(notebook: { color: string }): CoverDesign {
     color: notebookColor(notebook.color),
     accent: templateInfo(template).accent,
     image: null,
+  }
+}
+
+const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i
+const IMAGE_RESOURCE = /^(data:image\/|https?:\/\/)/i
+
+function templateFromApi(value: string | null | undefined): CoverTemplate | null {
+  if (typeof value !== 'string') return null
+
+  const clean = value.trim().toLowerCase()
+  return COVER_TEMPLATES.find((item) => item.id === clean)?.id ?? null
+}
+
+function colorFromApi(value: string | null | undefined): string | null {
+  if (typeof value !== 'string') return null
+
+  const clean = value.trim()
+  if (HEX_COLOR.test(clean)) return clean
+
+  return NOTEBOOK_COLORS.find((item) => item.id === clean.toLowerCase())?.value ?? null
+}
+
+function imageFromApi(value: string | null | undefined): string | null {
+  if (typeof value !== 'string') return null
+
+  const clean = value.trim()
+  return IMAGE_RESOURCE.test(clean) ? clean : null
+}
+
+/**
+ * Convierte el diseño que llega del backend en una portada segura.
+ * Los valores no reconocidos (por ejemplo datos de prueba) caen al diseño
+ * derivado del color del cuaderno.
+ */
+export function coverDesignFrom(
+  raw?: NotebookDesignApi | null,
+  baseColor?: string,
+): CoverDesign {
+  const fallback = defaultCover({ color: baseColor ?? DEFAULT_NOTEBOOK_COLOR })
+
+  if (!raw) return fallback
+
+  return {
+    template: templateFromApi(raw.template) ?? fallback.template,
+    color: colorFromApi(raw.color) ?? fallback.color,
+    accent: colorFromApi(raw.accent) ?? fallback.accent,
+    image: imageFromApi(raw.image),
   }
 }
 

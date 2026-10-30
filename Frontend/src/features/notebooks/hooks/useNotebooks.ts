@@ -9,7 +9,7 @@ import {
 import type { NotebookPayload } from '../types'
 
 /** Cuadernos por página en el listado. */
-export const NOTEBOOKS_PAGE_SIZE = 20
+export const NOTEBOOKS_PAGE_SIZE = 6
 
 export const notebooksKeys = {
   all: ['notebooks'] as const,
@@ -19,12 +19,17 @@ export const notebooksKeys = {
   detail: (id: string) => [...notebooksKeys.all, 'detail', id] as const,
 }
 
-/** Cuadernos del usuario, ordenados por `orden` (`GET /api/cuaderno/all`). */
+/**
+ * Cuadernos del usuario, ordenados por `orden` (`GET /api/cuaderno/all`).
+ * `gcTime: 0` descarta la página anterior al cambiar: solo vive la página que
+ * se está viendo y no se acumulan datos de otras páginas en el cliente.
+ */
 export function useNotebooks(page = 0, size = NOTEBOOKS_PAGE_SIZE, sort = 'orden') {
   return useQuery({
     queryKey: notebooksKeys.list(page, size, sort),
     queryFn: () => fetchNotebooks(page, size, sort),
     staleTime: 60_000,
+    gcTime: 0,
   })
 }
 
@@ -46,7 +51,7 @@ export function useCreateNotebook() {
     mutationFn: (payload: NotebookPayload) => createNotebookRequest(payload),
     onSuccess: (notebook) => {
       queryClient.setQueryData(notebooksKeys.detail(notebook.id), notebook)
-      queryClient.invalidateQueries({ queryKey: notebooksKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: notebooksKeys.all })
     },
   })
 }
@@ -59,7 +64,7 @@ export function useUpdateNotebook(id: string) {
     mutationFn: (payload: NotebookPayload) => updateNotebookRequest(id, payload),
     onSuccess: (notebook) => {
       queryClient.setQueryData(notebooksKeys.detail(id), notebook)
-      queryClient.invalidateQueries({ queryKey: notebooksKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: notebooksKeys.all })
     },
   })
 }

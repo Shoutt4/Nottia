@@ -17,4 +17,7 @@ export const notePath = (id: string) => `${ROUTES.notes}/${id}`
 /** Ruta del diseñador de portada de un cuaderno. */
 export const notebookEditPath = (id: string) => `${ROUTES.notebooks}/${id}/editar`
 
+/** Ruta de las notas de un cuaderno. */
+export const notebookNotesPath = (id: string) => `${ROUTES.notebooks}/${id}/notas`
+
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES]

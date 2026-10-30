@@ -3,6 +3,23 @@
  * El endpoint real es `/api/cuaderno/...` (singular, con la errata `idCuader`).
  */
 
+/** Diseño de la tapa tal como lo devuelve el backend (`desing`). */
+export interface NotebookDesignApi {
+  idDesing?: string | null
+  template?: string | null
+  color?: string | null
+  accent?: string | null
+  image?: string | null
+}
+
+/** Diseño de la tapa para crear un cuaderno. */
+export interface NotebookDesignPayload {
+  template: string
+  color: string
+  accent: string
+  image: string | null
+}
+
 /** Respuesta de `POST /api/cuaderno/create` y `PUT /api/cuaderno/update/{id}`. */
 export interface NotebookResponse {
   idCuader: string
@@ -10,16 +27,22 @@ export interface NotebookResponse {
   nombre: string
   color: string
   orden: number
+  desing?: NotebookDesignApi | null
   createAt: string | null
   updateAt: string | null
 }
 
-/** Cuerpo de crear/actualizar un cuaderno. */
+/**
+ * Cuerpo de crear/actualizar un cuaderno.
+ * `desing` se envía al crear; al editar se omite para no reemplazar el diseño
+ * que el backend ya tiene asociado.
+ */
 export interface NotebookPayload {
   idUsuario: string
   nombre: string
   color: string
   orden: number
+  desing?: NotebookDesignPayload
 }
 
 /** Cuaderno tal como lo usa la interfaz. */
@@ -29,6 +52,7 @@ export interface Notebook {
   nombre: string
   color: string
   orden: number
+  design?: NotebookDesignApi | null
   createdAt: string | null
   updatedAt: string | null
 }

@@ -4,7 +4,7 @@ import { ROUTES } from '@/config/routes'
 import { LoginPage, RegisterPage, VerifyEmailPage } from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
 import { NotebookDesignerPage, NotebooksPage } from '@/features/notebooks'
-import { NoteEditorPage } from '@/features/notes'
+import { NotebookNotesPage, NoteEditorPage } from '@/features/notes'
 import { ProfilePage } from '@/features/profile'
 import { SidebarLayout } from '@/features/sidebar'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
@@ -41,6 +41,7 @@ export const router = createBrowserRouter([
           { path: ROUTES.dashboard, element: <HomePage /> },
           { path: ROUTES.notebooks, element: <NotebooksPage /> },
           { path: ROUTES.notebookNew, element: <NotebookDesignerPage /> },
+          { path: `${ROUTES.notebooks}/:notebookId/notas`, element: <NotebookNotesPage /> },
           { path: `${ROUTES.notebooks}/:notebookId/editar`, element: <NotebookDesignerPage /> },
           { path: ROUTES.profile, element: <ProfilePage /> },
           // El editor vive dentro del shell (menú visible) y ocupa el alto disponible.

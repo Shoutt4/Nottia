@@ -21,6 +21,7 @@ function toNote(dto: NotaResponse): Note {
     notebook: NOTEBOOK_LABEL,
     title: dto.titulo ?? '',
     content: dto.contenido ?? '',
+    createdAt: dto.createAt ?? '',
     updatedAt: dto.updateAt ?? dto.createAt ?? '',
     locked: dto.bloqueado,
     pinned: dto.fijado,
@@ -43,6 +44,30 @@ export async function updateNoteRequest(id: string, payload: UpdateNotePayload):
 export async function fetchNote(id: string): Promise<Note> {
   const { data } = await http.get<NotaResponse>(`/api/notas/${encodeURIComponent(id)}`)
   return toNote(data)
+}
+
+/**
+ * `GET /api/notas/by/cuaderno/{idCuaderno}?page=&size=&sort=createAt,Asc`.
+ * Devuelve las notas del cuaderno, paginadas de 10 en 10 por defecto.
+ */
+export async function fetchNotesByNotebook(
+  notebookId: string,
+  page = 0,
+  size = 10,
+  sort = 'createAt,Asc',
+): Promise<NotePage> {
+  const { data } = await http.get<PageResponse<NotaResponse>>(
+    `/api/notas/by/cuaderno/${encodeURIComponent(notebookId)}`,
+    { params: { page, size, sort } },
+  )
+
+  return {
+    notes: data.content.map(toNote),
+    page: data.number,
+    size: data.size,
+    total: data.totalElements,
+    totalPages: data.totalPages,
+  }
 }
 
 /**

@@ -1,12 +1,16 @@
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { fetchNote, fetchNotes } from '../api/notesApi'
+import { fetchNote, fetchNotes, fetchNotesByNotebook } from '../api/notesApi'
 import type { NotePage } from '../types'
 
 /** Tamaño de página de la lista lateral del editor. */
 export const NOTES_PAGE_SIZE = 50
 /** Notas por tanda del carrusel del inicio. */
 export const NOTES_RAIL_PAGE_SIZE = 12
+/** Notas por página dentro de un cuaderno. */
+export const NOTEBOOK_NOTES_PAGE_SIZE = 10
+/** Orden pedido a la API para las notas de un cuaderno. */
+export const NOTEBOOK_NOTES_SORT = 'createAt,Asc'
 
 export const notesKeys = {
   all: ['notes'] as const,
@@ -14,6 +18,9 @@ export const notesKeys = {
   list: (page: number, size: number) => [...notesKeys.lists(), page, size] as const,
   infinites: () => [...notesKeys.all, 'infinite'] as const,
   infinite: (size: number) => [...notesKeys.infinites(), size] as const,
+  notebookPages: () => [...notesKeys.all, 'notebook'] as const,
+  notebookPage: (notebookId: string, page: number, size: number, sort: string) =>
+    [...notesKeys.notebookPages(), notebookId, page, size, sort] as const,
   detail: (id: string) => [...notesKeys.all, 'detail', id] as const,
 }
 
@@ -22,6 +29,20 @@ export function useNotes(page = 0, size = NOTES_PAGE_SIZE) {
   return useQuery({
     queryKey: notesKeys.list(page, size),
     queryFn: () => fetchNotes(page, size),
+    staleTime: 30_000,
+  })
+}
+
+/** Notas paginadas de un cuaderno (`GET /api/notas/by/cuaderno/{id}`). */
+export function useNotebookNotes(
+  notebookId: string | undefined,
+  page = 0,
+  size = NOTEBOOK_NOTES_PAGE_SIZE,
+) {
+  return useQuery({
+    queryKey: notesKeys.notebookPage(notebookId ?? '', page, size, NOTEBOOK_NOTES_SORT),
+    queryFn: () => fetchNotesByNotebook(notebookId as string, page, size, NOTEBOOK_NOTES_SORT),
+    enabled: Boolean(notebookId),
     staleTime: 30_000,
   })
 }
@@ -58,6 +79,13 @@ export function useNote(id: string | undefined) {
       if (!id) return undefined
 
       for (const [, page] of queryClient.getQueriesData<NotePage>({ queryKey: notesKeys.lists() })) {
+        const found = page?.notes.find((note) => note.id === id)
+        if (found) return found
+      }
+
+      for (const [, page] of queryClient.getQueriesData<NotePage>({
+        queryKey: notesKeys.notebookPages(),
+      })) {
         const found = page?.notes.find((note) => note.id === id)
         if (found) return found
       }

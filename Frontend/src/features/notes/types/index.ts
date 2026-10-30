@@ -49,6 +49,8 @@ export interface Note {
   /** Vacío = nota sin título. */
   title: string
   content: string
+  /** Fecha de creación (la que usa el orden de las notas de un cuaderno). */
+  createdAt: string
   /** ISO 8601; alimenta el "hace X". */
   updatedAt: string
   /** `bloqueado` en la API. */
@@ -57,7 +59,7 @@ export interface Note {
   pinned: boolean
 }
 
-/** Página de `GET /api/notas/all`. */
+/** Página de notas (`/api/notas/all` y `/api/notas/by/cuaderno/{id}`). */
 export interface NotePage {
   notes: Note[]
   page: number
