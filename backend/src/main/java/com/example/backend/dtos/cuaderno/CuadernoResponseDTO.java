@@ -20,11 +20,7 @@ public class CuadernoResponseDTO {
     private String nombre;
     private String color;
     private int orden;
-    private String template;
-    private String coverColor;
-    private String accent;
-    @Column(columnDefinition = "TEXT")
-    private String image;
+    private DesingResponseDTO desing;
     private Timestamp createAt;
     private Timestamp updateAt;
 }

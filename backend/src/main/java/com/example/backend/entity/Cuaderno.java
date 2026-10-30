@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -42,11 +43,9 @@ public class Cuaderno {
     @Size(max = 20)
     private String color;
     private int orden;
-    private String template;
-    private String coverColor;
-    private String accent;
-    @Column(columnDefinition = "TEXT")
-    private String image;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_desing", referencedColumnName = "id_desing", nullable = false)
+    private Design desing;
     @CreationTimestamp
     private Timestamp createAt;
     @UpdateTimestamp

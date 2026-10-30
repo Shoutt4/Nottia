@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 import com.example.backend.dtos.cuaderno.CuadernoRequestDTO;
 import com.example.backend.dtos.cuaderno.CuadernoResponseDTO;
 import com.example.backend.entity.Cuaderno;
+import com.example.backend.entity.Design;
 import com.example.backend.entity.Usuario;
 import com.example.backend.exception.ErrorGlobal;
 import com.example.backend.mapper.cuaderno.CuadernoResponseMapper;
+import com.example.backend.mapper.cuaderno.DesignMapper;
 import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.repository.cuaderno.CuadernoRepository;
+import com.example.backend.repository.cuaderno.DesingRepository;
 import com.example.backend.security.JwtService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CuadernoService {
@@ -20,13 +25,18 @@ public class CuadernoService {
     private final CuadernoRepository cuadernoRepository;
     private final JwtService jwtService;
     private AuthRepository authRepository;
+    private final DesingRepository design;
+    private final DesignMapper designMapper;
 
     public CuadernoService(CuadernoRepository cuadernoRepository,
-            CuadernoResponseMapper cuadernoResponseMapper, JwtService jwtService, AuthRepository authRepository) {
+            CuadernoResponseMapper cuadernoResponseMapper, JwtService jwtService, AuthRepository authRepository,
+            DesingRepository design, DesignMapper designMapper) {
         this.cuadernoRepository = cuadernoRepository;
         this.cuadernoResponseMapper = cuadernoResponseMapper;
         this.jwtService = jwtService;
         this.authRepository = authRepository;
+        this.design = design;
+        this.designMapper = designMapper;
     }
 
     public CuadernoResponseDTO getCuaderno(String idCuaderno, String token) {
@@ -49,11 +59,13 @@ public class CuadernoService {
         }
     }
 
+    @Transactional
     public CuadernoResponseDTO saveCuaderno(CuadernoRequestDTO requestDTO) {
         Usuario usuario = this.authRepository.findById(requestDTO.getIdUsuario())
                 .orElseThrow(() -> new IllegalStateException("error el usuario no existe"));
         Cuaderno cuaderno = this.cuadernoResponseMapper.saveCuaderno(requestDTO);
         cuaderno.setIdUsuario(usuario);
+        this.design.save(cuaderno.getDesing());
         return this.cuadernoResponseMapper.toResponseCuaderno(this.cuadernoRepository.save(cuaderno));
     }
 

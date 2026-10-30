@@ -15,9 +15,6 @@ public class CuadernoRequestDTO {
     private String nombre;
     private String color;
     private int orden;
-    private String template;
-    private String coverColor;
-    private String accent;
-    @Column(columnDefinition = "TEXT")
-    private String image;
+    private DesignRequestDTO desing;
+
 }

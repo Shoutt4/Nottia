@@ -10,18 +10,21 @@ import com.example.backend.dtos.cuaderno.CuadernoResponseDTO;
 import com.example.backend.entity.Cuaderno;
 import com.example.backend.entity.Usuario;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, uses = {
+        DesignMapper.class })
 public interface CuadernoResponseMapper {
 
     @Mapping(target = "idCuader", source = "idCuader")
     @Mapping(target = "idUsuario", source = "idUsuario.idUsuario")
+    @Mapping(target = "desing", source = "desing")
+    @Mapping(target = "createAt", source = "createAt")
+    @Mapping(target = "updateAt", source = "updateAt")
     CuadernoResponseDTO toResponseCuaderno(Cuaderno cuaderno);
 
     default Usuario map(String idUsuario) {
         if (idUsuario == null) {
             return null;
         }
-
         Usuario usuario = new Usuario();
         usuario.setIdUsuario(idUsuario);
         return usuario;
@@ -31,12 +34,15 @@ public interface CuadernoResponseMapper {
     @Mapping(target = "idUsuario", ignore = true)
     @Mapping(target = "createAt", ignore = true)
     @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "desing", source = "desing")
+    @Mapping(target = "descipcion", ignore = true)
     Cuaderno saveCuaderno(CuadernoRequestDTO cuadernoRequestDTO);
 
     @Mapping(target = "idCuader", ignore = true)
     @Mapping(target = "idUsuario", ignore = true)
     @Mapping(target = "createAt", ignore = true)
     @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "descipcion", ignore = true)
     Cuaderno updateCuadernoMap(CuadernoRequestDTO cuadernoRequestDTO, @MappingTarget Cuaderno entity);
 
     default Usuario getUsuario(String idUsuario) {
