@@ -34,10 +34,10 @@ public class Usuario {
     private String idUsuario;
     @Column(nullable = false, length = 50)
     private String nombre;
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 100)
     private String apellido;
     @Email
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;

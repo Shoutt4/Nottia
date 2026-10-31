@@ -1,5 +1,6 @@
 package com.example.backend.controller.email;
 
+import com.example.backend.config.EmailConfig;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,15 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/email")
 public class EmailController {
 
+    private final EmailConfig emailConfig;
     private final EmailService emailService;
     private EmailVerificationTokenService emailVerificationTokenService;
 
-    public EmailController(EmailService emailService, EmailVerificationTokenService emailVerificationTokenService) {
+    public EmailController(EmailService emailService, EmailVerificationTokenService emailVerificationTokenService,
+            EmailConfig emailConfig) {
         this.emailService = emailService;
         this.emailVerificationTokenService = emailVerificationTokenService;
+        this.emailConfig = emailConfig;
     }
 
     @PostMapping("/verify")
@@ -42,4 +46,11 @@ public class EmailController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(
                 Map.of("suces", "email verificado correstamente"));
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<Map<String, String>> reevnciarEmail(@Valid @RequestParam String email) {
+        this.emailVerificationTokenService.reenviarEmail(email);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Map.of("succes", "email verificado correctamente"));
+    }
+
 }

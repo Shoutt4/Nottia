@@ -45,17 +45,26 @@ public class EmailVerificationTokenService {
 
     @Transactional
     public void enviarEmailVerification(Usuario usuario) {
-        byte[] bytes = new byte[32];
-        this.secureRandom.nextBytes(bytes);
-        String token = Base64.getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(bytes);
+        String token = generateTokenVerifi();
         EmailVerificationToken emailVerificationToken = EmailVerificationToken.builder()
                 .tokenHash(token)
                 .usuario(usuario)
                 .fechaExperiracion(LocalDateTime.now().plusMinutes(15))
                 .build();
         this.emailVerificationTokenRepository.save(emailVerificationToken);
+        enviarEmail(usuario, token);
+    }
+
+    private String generateTokenVerifi() {
+        byte[] bytes = new byte[32];
+        this.secureRandom.nextBytes(bytes);
+        String token = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes);
+        return token;
+    }
+
+    private void enviarEmail(Usuario usuario, String token) {
         String enlace = frontedUrl + "verify-email?token=" + token;
 
         EmailDTO emailDTO = new EmailDTO();
@@ -71,6 +80,23 @@ public class EmailVerificationTokenService {
             this.emailService.sendEmail(emailDTO);
         } catch (Exception e) {
             throw new ErrorGlobal("no se pudo enviar el enlace", 404, false);
+        }
+    }
+
+    @Transactional
+    public void reenviarEmail(String Correo) {
+        EmailVerificationToken emailVerificationToken = this.emailVerificationTokenRepository
+                .findByUsuario_Email(Correo)
+                .orElseThrow(() -> new ErrorGlobal("correo no registrado", 0, false));
+        Usuario usuario = emailVerificationToken.getUsuario();
+        if (!usuario.isEmailVerifi()) {
+            String token = generateTokenVerifi();
+            emailVerificationToken.setTokenHash(token);
+            emailVerificationToken.setFechaExperiracion(LocalDateTime.now().plusMinutes(15));
+            this.emailVerificationTokenRepository.save(emailVerificationToken);
+            enviarEmail(usuario, token);
+        } else {
+            throw new ErrorGlobal("error correo ya verificado", 404, false);
         }
     }
 

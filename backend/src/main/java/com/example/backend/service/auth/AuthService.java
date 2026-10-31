@@ -56,9 +56,9 @@ public class AuthService {
 
         if (!this.authRepository.existsByEmail(requestDTO.getEmail())) {
             Usuario usuario = this.authRepository.save(convertirUsuarioRequest(requestDTO));
-            this.emailVerificationTokenService.enviarEmailVerification(usuario);
             Tablero tablero = Tablero.builder().idUsuario(usuario).titulo(requestDTO.getNombre()).build();
             this.tableroRepository.save(tablero);
+            this.emailVerificationTokenService.enviarEmailVerification(usuario);
             return (Map.of("suces", true, "message",
                     "usuario creado correctamente revisa tu correo para  verifica tu cuenta"));
 

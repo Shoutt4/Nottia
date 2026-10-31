@@ -11,4 +11,6 @@ import com.example.backend.entity.EmailVerificationToken;
 public interface EmailVerificationTokenRepository extends JpaRepository<EmailVerificationToken, String> {
 
     Optional<EmailVerificationToken> findByTokenHashAndFechaConsumoIsNull(String tokenHash);
+
+    Optional<EmailVerificationToken> findByUsuario_Email(String email);
 }
