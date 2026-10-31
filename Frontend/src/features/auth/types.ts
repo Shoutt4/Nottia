@@ -10,6 +10,11 @@ export type LoginErrors = Partial<Record<LoginField, string>>
 
 export type LoginStatus = 'idle' | 'submitting' | 'success'
 
+/** Resultado de enviar el login: si falla por correo sin verificar, trae el correo. */
+export type LoginResult =
+  | { ok: true }
+  | { ok: false; unverifiedEmail?: string }
+
 /** Cuerpo de `POST /api/auth/register` (`AuthRequestDTO`). */
 export interface RegisterPayload {
   nombre: string
@@ -39,3 +44,10 @@ export type RegisterStatus = 'idle' | 'submitting' | 'success'
 export interface VerifyEmailResponse {
   suces: string
 }
+
+/** Respuesta de `POST /api/email/update?email=…` (el backend usa `succes`). */
+export interface ResendVerificationResponse {
+  succes: string
+}
+
+export type ResendStatus = 'idle' | 'sending' | 'sent' | 'error'

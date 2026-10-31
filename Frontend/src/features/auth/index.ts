@@ -1,3 +1,5 @@
+export { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 export { LoginPage } from './pages/LoginPage'
 export { RegisterPage } from './pages/RegisterPage'
+export { ResendVerificationPage } from './pages/ResendVerificationPage'
 export { VerifyEmailPage } from './pages/VerifyEmailPage'

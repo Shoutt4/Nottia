@@ -1,7 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import { ROUTES } from '@/config/routes'
-import { LoginPage, RegisterPage, VerifyEmailPage } from '@/features/auth'
+import {
+  ForgotPasswordPage,
+  LoginPage,
+  RegisterPage,
+  ResendVerificationPage,
+  VerifyEmailPage,
+} from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
 import { NotebookDesignerPage, NotebooksPage } from '@/features/notebooks'
 import { NotebookNotesPage, NoteEditorPage } from '@/features/notes'
@@ -30,6 +36,8 @@ export const router = createBrowserRouter([
       { path: ROUTES.home, element: <LandingPage /> },
       { path: ROUTES.login, element: <LoginPage /> },
       { path: ROUTES.register, element: <RegisterPage /> },
+      { path: ROUTES.resendVerification, element: <ResendVerificationPage /> },
+      { path: ROUTES.forgotPassword, element: <ForgotPasswordPage /> },
     ],
   },
   {

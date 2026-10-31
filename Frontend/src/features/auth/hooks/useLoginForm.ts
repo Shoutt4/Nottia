@@ -6,7 +6,13 @@ import { getAppError } from '@/lib/errors'
 import { toast } from '@/lib/toast'
 
 import { login } from '../api/authApi'
-import type { LoginCredentials, LoginErrors, LoginField, LoginStatus } from '../types'
+import type {
+  LoginCredentials,
+  LoginErrors,
+  LoginField,
+  LoginResult,
+  LoginStatus,
+} from '../types'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -33,7 +39,6 @@ function loginErrorMessage(error: Error | null): string {
   const appError = getAppError(error)
 
   if (appError.kind === 'network') return appError.message
-  if (appError.status === 404) return 'Verifica tu correo antes de iniciar sesión.'
   if (appError.kind === 'auth' || appError.status === 500) return 'Correo o contraseña incorrectos.'
 
   return appError.message
@@ -41,8 +46,9 @@ function loginErrorMessage(error: Error | null): string {
 
 /**
  * Estado, validación y envío del formulario de login.
- * Llama a `POST /api/auth/login`, guarda el JWT y devuelve si tuvo éxito.
- * Los resultados se comunican con avisos (`toast`).
+ * Llama a `POST /api/auth/login`, guarda el JWT y devuelve el resultado.
+ * Los errores se muestran con `toast`; si el correo no está verificado,
+ * devuelve `unverifiedEmail` para navegar a la página de reenvío.
  */
 export function useLoginForm() {
   const [values, setValues] = useState<LoginCredentials>(EMPTY)
@@ -74,13 +80,13 @@ export function useLoginForm() {
   )
 
   const handleSubmit = useCallback(
-    async (event?: FormEvent<HTMLFormElement>) => {
+    async (event?: FormEvent<HTMLFormElement>): Promise<LoginResult> => {
       event?.preventDefault()
 
       const nextErrors = validate(values)
       setTouched({ email: true, password: true })
       setErrors(nextErrors)
-      if (Object.keys(nextErrors).length > 0) return false
+      if (Object.keys(nextErrors).length > 0) return { ok: false }
 
       setStatus('submitting')
 
@@ -89,11 +95,20 @@ export function useLoginForm() {
         setToken(token, values.remember)
         setStatus('success')
         toast.success('¡Bienvenido de nuevo!')
-        return true
+        return { ok: true }
       } catch (error) {
+        const normalizedError = error instanceof Error ? error : null
+        const appError = getAppError(normalizedError)
         setStatus('idle')
-        toast.error(loginErrorMessage(error instanceof Error ? error : null))
-        return false
+
+        // La cuenta existe pero no se ha verificado: el formulario navega a
+        // la página de reenvío con el correo ya cargado.
+        if (appError.status === 404) {
+          return { ok: false, unverifiedEmail: values.email.trim() }
+        }
+
+        toast.error(loginErrorMessage(normalizedError))
+        return { ok: false }
       }
     },
     [values],
@@ -104,5 +119,13 @@ export function useLoginForm() {
     [touched, errors],
   )
 
-  return { values, status, errorFor, setField, setRemember, handleBlur, handleSubmit }
+  return {
+    values,
+    status,
+    errorFor,
+    setField,
+    setRemember,
+    handleBlur,
+    handleSubmit,
+  }
 }

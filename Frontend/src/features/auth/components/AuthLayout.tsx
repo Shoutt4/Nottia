@@ -11,11 +11,25 @@ interface AuthLayoutProps {
   heading: string
   description: string
   perks: string[]
+  /** Etiqueta y folio de la hoja; login y registro usan los valores por defecto. */
+  cardEyebrow?: string
+  cardNumber?: string
+  /** Folio de la portada izquierda, para que coincida con la hoja. */
+  coverNumber?: string
   children: ReactNode
 }
 
-/** Estructura compartida por login y registro: portada de cuaderno + hoja. */
-export function AuthLayout({ eyebrow, heading, description, perks, children }: AuthLayoutProps) {
+/** Estructura compartida por las páginas de acceso: portada de cuaderno + hoja. */
+export function AuthLayout({
+  eyebrow,
+  heading,
+  description,
+  perks,
+  cardEyebrow = 'Acceso',
+  cardNumber = 'N.º 01',
+  coverNumber = 'N.º 01',
+  children,
+}: AuthLayoutProps) {
   return (
     <div className="note-desk relative min-h-dvh overflow-hidden text-ink">
       <div
@@ -61,7 +75,7 @@ export function AuthLayout({ eyebrow, heading, description, perks, children }: A
 
               <div className="relative flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#b9afa1]">
                 <span>Cuaderno de ideas</span>
-                <span>N.º 01</span>
+                <span>{coverNumber}</span>
               </div>
 
               <div className="relative mt-12">
@@ -101,9 +115,9 @@ export function AuthLayout({ eyebrow, heading, description, perks, children }: A
             <div className="mb-6 flex items-center justify-between gap-4 border-b border-paper-line pb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">
               <span className="flex items-center gap-2">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-paper-accent" />
-                Acceso
+                {cardEyebrow}
               </span>
-              <span>N.º 01</span>
+              <span>{cardNumber}</span>
             </div>
 
             {children}

@@ -4,6 +4,7 @@ import type {
   LoginCredentials,
   RegisterPayload,
   RegisterResponse,
+  ResendVerificationResponse,
   VerifyEmailResponse,
 } from '../types'
 
@@ -42,4 +43,14 @@ export async function verifyEmail(token: string): Promise<string> {
   })
 
   return data.suces
+}
+
+/**
+ * `POST /api/email/update?email=…` — genera un token nuevo y reenvía el enlace
+ * de verificación. Solo funciona si la cuenta sigue sin verificar.
+ */
+export async function resendVerification(email: string): Promise<void> {
+  await http.post<ResendVerificationResponse>('/api/email/update', null, {
+    params: { email: email.trim() },
+  })
 }

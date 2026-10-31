@@ -4,12 +4,18 @@ export const ROUTES = {
   login: '/login',
   register: '/register',
   verifyEmail: '/verify-email',
+  resendVerification: '/reenviar-verificacion',
+  forgotPassword: '/recuperar-contrasena',
   dashboard: '/dashboard',
   notebooks: '/cuadernos',
   notebookNew: '/cuadernos/nuevo',
   profile: '/perfil',
   notes: '/notas',
 } as const
+
+/** Ruta para reenviar la verificación, con el correo precargado si viene del login. */
+export const resendVerificationPath = (email: string) =>
+  `${ROUTES.resendVerification}?email=${encodeURIComponent(email)}`
 
 /** Ruta del editor de una nota concreta. */
 export const notePath = (id: string) => `${ROUTES.notes}/${id}`

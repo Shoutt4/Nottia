@@ -1,10 +1,9 @@
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { ArrowRightIcon, CheckIcon, LockIcon, MailIcon } from '@/components/ui/icons'
-import { ROUTES } from '@/config/routes'
-import { toast } from '@/lib/toast'
+import { ROUTES, resendVerificationPath } from '@/config/routes'
 
 import { useLoginForm } from '../hooks/useLoginForm'
 import { useShake } from '../hooks/useShake'
@@ -12,7 +11,8 @@ import { FormField } from './FormField'
 
 /** Formulario de login conectado a `POST /api/auth/login`. */
 export function LoginForm() {
-  const { values, status, errorFor, setField, setRemember, handleBlur, handleSubmit } = useLoginForm()
+  const { values, status, errorFor, setField, setRemember, handleBlur, handleSubmit } =
+    useLoginForm()
   const { ref, shake } = useShake<HTMLFormElement>()
   const navigate = useNavigate()
 
@@ -20,11 +20,19 @@ export function LoginForm() {
   const success = status === 'success'
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    const ok = await handleSubmit(event)
-    if (!ok) {
+    const result = await handleSubmit(event)
+
+    if (!result.ok) {
+      // Correo sin verificar: se abre la página dedicada de reenvío.
+      if (result.unverifiedEmail) {
+        navigate(resendVerificationPath(result.unverifiedEmail))
+        return
+      }
+
       shake()
       return
     }
+
     // Deja ver el "¡Listo!" un instante antes de entrar.
     window.setTimeout(() => navigate(ROUTES.dashboard), 400)
   }
@@ -65,13 +73,12 @@ export function LoginForm() {
           />
           Recordarme
         </label>
-        <button
-          type="button"
-          onClick={() => toast.info('La recuperación de contraseña estará disponible pronto.')}
+        <Link
+          to={ROUTES.forgotPassword}
           className="font-medium text-accent transition-colors hover:text-accent-hover"
         >
           ¿Olvidaste tu contraseña?
-        </button>
+        </Link>
       </div>
 
       <Button type="submit" disabled={submitting || success} className="mt-2 w-full py-3">

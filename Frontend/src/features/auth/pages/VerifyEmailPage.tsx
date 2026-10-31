@@ -11,8 +11,6 @@ import { getAppError } from '@/lib/errors'
 import { cn } from '@/lib/utils'
 
 import { useVerifyEmail } from '../hooks/useVerifyEmail'
-
-/** Página pública del enlace del correo: `/verify-email?token=…`. */
 export function VerifyEmailPage() {
   const [params] = useSearchParams()
   const token = params.get('token')
