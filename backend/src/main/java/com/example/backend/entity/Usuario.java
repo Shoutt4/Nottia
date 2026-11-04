@@ -1,9 +1,14 @@
 package com.example.backend.entity;
 
 import java.sql.Date;
+import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.backend.dtos.auth.Role;
 
@@ -27,7 +32,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Table(name = "usuario_ann")
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_usuario")
@@ -53,4 +58,37 @@ public class Usuario {
     @UpdateTimestamp
     private Date updateAt;
 
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role == null ? List.of() : List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return emailVerifi;
+    }
 }
