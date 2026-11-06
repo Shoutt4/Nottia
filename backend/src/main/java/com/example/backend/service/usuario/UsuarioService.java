@@ -3,10 +3,12 @@ package com.example.backend.service.usuario;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
+import com.example.backend.dtos.auth.Role;
 import com.example.backend.dtos.usuario.UserResponseDto;
 import com.example.backend.dtos.usuario.UsuarioRequestDto;
 import com.example.backend.entity.Usuario;
@@ -62,6 +64,34 @@ public class UsuarioService {
             return response;
         } else {
             throw new authExceotion("error al otener usuario no autenticado", 404, false);
+        }
+    }
+
+    public Page<UserResponseDto> getAllByUser(Pageable page) {
+        if (this.authRepository.countAllByRole(Role.USUARIO) > 0) {
+            return this.authRepository.findAllByRole(Role.USUARIO, page).map(p -> usuarioResponseDTO(p));
+        } else {
+            throw new authExceotion("no hay usuarios registrados", 404, false);
+        }
+    }
+
+    @Transactional
+    public Map<String, Object> deleteByUser(String idUsuario) {
+        if (this.authRepository.existsById(idUsuario)) {
+            this.authRepository.deleteById(idUsuario);
+            return Map.of("suces ", true, "message", "usaurio eliminado correctamente");
+
+        } else {
+            throw new authExceotion("error usuario no existente", 0, false);
+        }
+    }
+
+    public Map<String, Object> updateUserByAdmin(String idUsuario, boolean activo) {
+        if (this.authRepository.existsById(idUsuario)) {
+            return Map.of("succes", true, "message",
+                    "el estado del usuario fue cambiado" + this.authRepository.updateUser(activo, idUsuario));
+        } else {
+            throw new authExceotion("usaurio no encontrado", 404, false);
         }
     }
 }

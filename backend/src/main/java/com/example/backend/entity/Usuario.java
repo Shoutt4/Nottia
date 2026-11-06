@@ -48,6 +48,7 @@ public class Usuario implements UserDetails {
     private String password;
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerifi = false;
+    private boolean activo = true;
     @Column(columnDefinition = "TEXT")
     private String urlAvatar;
     private String phone;

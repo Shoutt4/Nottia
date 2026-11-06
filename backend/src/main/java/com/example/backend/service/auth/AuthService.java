@@ -48,7 +48,7 @@ public class AuthService {
 
         return Usuario.builder().nombre(requestDTO.getNombre()).apellido(requestDTO.getApellido())
                 .email(requestDTO.getEmail())
-                .password(passwordEncoder.encode(requestDTO.getPassword())).role(Role.USUARIO).build();
+                .password(passwordEncoder.encode(requestDTO.getPassword())).role(Role.USUARIO).activo(true).build();
     }
 
     @Transactional
