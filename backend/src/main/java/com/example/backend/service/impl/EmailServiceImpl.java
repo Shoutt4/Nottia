@@ -42,4 +42,21 @@ public class EmailServiceImpl implements EmailService {
             throw new ErrorGlobal("error al enviar mensage", 404, false);
         }
     }
+
+    @Override
+    public void resetPassword(String destinatario, String token) {
+        try {
+            MimeMessage mensaje = this.javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+            helper.setTo(destinatario);
+            helper.setSubject("Recuperación de Contraseña - Nottia");
+            String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+            Context context = new Context();
+            String contenidoHtml = templateEngine.process("password-reset.html", context);
+            helper.setText(contenidoHtml, true);
+            javaMailSender.send(mensaje);
+        } catch (Exception e) {
+            throw new ErrorGlobal("error en enviar el mensage", 404, false);
+        }
+    }
 }

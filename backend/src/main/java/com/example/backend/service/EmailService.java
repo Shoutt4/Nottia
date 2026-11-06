@@ -7,4 +7,6 @@ import jakarta.mail.MessagingException;
 public interface EmailService {
 
     public void sendEmail(EmailDTO emailDTO) throws MessagingException;
+
+    public void resetPassword(String destinatario, String token) throws MessagingException;
 }

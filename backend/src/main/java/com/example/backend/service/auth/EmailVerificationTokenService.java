@@ -64,6 +64,27 @@ public class EmailVerificationTokenService {
         return token;
     }
 
+    @Transactional
+    public void resetPassword(String email) {
+        String token = hashToken(generateTokenVerifi());
+        EmailVerificationToken emailVerificationToken = this.emailVerificationTokenRepository.findByUsuario_Email(email)
+                .orElseThrow(() -> new ErrorGlobal("email no encontrado", 404, false));
+        emailVerificationToken.setResetToken(token);
+        emailVerificationToken.setTokenResetExpiration(LocalDateTime.now().plusMinutes(15));
+        this.emailVerificationTokenRepository.save(emailVerificationToken);
+        resetPasswordEmail(emailVerificationToken.getUsuario(), token);
+
+    }
+
+    private void resetPasswordEmail(Usuario usuario, String token) {
+        String enlace = frontedUrl + "verify-email?token=" + token;
+        try {
+            this.emailService.resetPassword(usuario.getEmail(), token);
+        } catch (Exception e) {
+            throw new ErrorGlobal("no se pudo enviar el enlace", 404, false);
+        }
+    }
+
     private void enviarEmail(Usuario usuario, String token) {
         String enlace = frontedUrl + "verify-email?token=" + token;
 

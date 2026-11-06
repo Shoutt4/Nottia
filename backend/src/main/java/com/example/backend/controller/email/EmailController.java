@@ -53,4 +53,11 @@ public class EmailController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Map.of("succes", "email verificado correctamente"));
     }
 
+    @PostMapping("/reset/email")
+    public ResponseEntity<Map<String, Object>> restPassword(@Valid @RequestParam String email) {
+        this.emailVerificationTokenService.resetPassword(email);
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(Map.of("succes", true, "message", "correo enviado correctamente"));
+    }
+
 }

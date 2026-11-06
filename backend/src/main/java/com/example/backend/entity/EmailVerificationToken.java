@@ -1,8 +1,6 @@
 package com.example.backend.entity;
 
-
 import java.time.LocalDateTime;
-
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,10 +28,10 @@ public class EmailVerificationToken {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
     private String tokenHash;
-
     private LocalDateTime fechaExperiracion;
     private LocalDateTime fechaConsumo;
-
+    private String resetToken;
+    private LocalDateTime tokenResetExpiration;
     private LocalDateTime creatAt;
 
     @PrePersist
