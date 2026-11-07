@@ -7,12 +7,15 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HexFormat;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.dtos.auth.ResetPasswordResquestDTO;
 import com.example.backend.dtos.email.EmailDTO;
 import com.example.backend.entity.EmailVerificationToken;
 import com.example.backend.entity.Usuario;
@@ -27,7 +30,8 @@ public class EmailVerificationTokenService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final AuthRepository authRepository;
     private final EmailService emailService;
-    private final SecureRandom secureRandom = new SecureRandom();;
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final PasswordEncoder passwordEncoder;
 
     private final String frontedUrl;
 
@@ -35,11 +39,13 @@ public class EmailVerificationTokenService {
             EmailVerificationTokenRepository emailVerificationTokenRepository,
             AuthRepository authRepository,
             EmailService emailService,
+            PasswordEncoder passwordEncoder,
             @Value("${app.frontend.url}") String frontedUrl) {
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.authRepository = authRepository;
         this.emailService = emailService;
         this.frontedUrl = frontedUrl;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
@@ -66,13 +72,32 @@ public class EmailVerificationTokenService {
 
     @Transactional
     public void resetPassword(String email) {
-        String token = hashToken(generateTokenVerifi());
+        String token = generateTokenVerifi();
         EmailVerificationToken emailVerificationToken = this.emailVerificationTokenRepository.findByUsuario_Email(email)
                 .orElseThrow(() -> new ErrorGlobal("email no encontrado", 404, false));
         emailVerificationToken.setResetToken(token);
         emailVerificationToken.setTokenResetExpiration(LocalDateTime.now().plusMinutes(15));
         this.emailVerificationTokenRepository.save(emailVerificationToken);
         resetPasswordEmail(emailVerificationToken.getUsuario(), token);
+
+    }
+
+    public Map<String, Object> verificateTokenPasswordReset(String token, ResetPasswordResquestDTO resquestDTO) {
+        if (token == null || resquestDTO.getEmail() == null) {
+            throw new ErrorGlobal("token  o correo invalido", 400, false);
+        }
+        EmailVerificationToken emailVerificationToken = this.emailVerificationTokenRepository
+                .findByResetTokenAndUsuario_Email(token, resquestDTO.getEmail())
+                .orElseThrow(() -> new ErrorGlobal("token invalido", 400, false));
+        if (emailVerificationToken.getTokenResetExpiration().isBefore(LocalDateTime.now())) {
+            throw new ErrorGlobal("token expirado", 400, false);
+        }
+        emailVerificationToken.setResetToken(null);
+        emailVerificationToken.setTokenResetExpiration(null);
+        emailVerificationToken.getUsuario().setPassword(this.passwordEncoder.encode(resquestDTO.getPassword()));
+        this.emailVerificationTokenRepository.save(emailVerificationToken);
+
+        return Map.of("succes", true, "message", "contraseña reseteada correctamente");
 
     }
 

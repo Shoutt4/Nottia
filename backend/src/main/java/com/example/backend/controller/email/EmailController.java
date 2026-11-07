@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dtos.auth.ResetPasswordResquestDTO;
 import com.example.backend.dtos.email.EmailDTO;
 import com.example.backend.service.EmailService;
 import com.example.backend.service.auth.EmailVerificationTokenService;
@@ -58,6 +60,14 @@ public class EmailController {
         this.emailVerificationTokenService.resetPassword(email);
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(Map.of("succes", true, "message", "correo enviado correctamente"));
+    }
+
+    @PostMapping("/rest/verify")
+    public ResponseEntity<Map<String, Object>> restPaswwordVerifi(@Valid @RequestBody ResetPasswordResquestDTO request,
+            @RequestParam String token) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(this.emailVerificationTokenService.verificateTokenPasswordReset(token, request));
+
     }
 
 }
