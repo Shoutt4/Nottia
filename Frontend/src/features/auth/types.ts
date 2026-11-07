@@ -51,3 +51,34 @@ export interface ResendVerificationResponse {
 }
 
 export type ResendStatus = 'idle' | 'sending' | 'sent' | 'error'
+
+/** Cuerpo de `POST /api/email/rest/verify?token=…` (`ResetPasswordResquestDTO`). */
+export interface ResetPasswordPayload {
+  email: string
+  password: string
+}
+
+/** Respuesta de `POST /api/email/reset/email` y `POST /api/email/rest/verify`. */
+export interface EmailActionResponse {
+  succes: boolean
+  message: string
+}
+
+/** Respuesta de `GET /api/email/reset/token/expiration?token=…`. */
+export interface ResetTokenResponse {
+  succes: boolean
+  message: string
+}
+
+/** Valores del formulario de cambio (la confirmación es solo del cliente). */
+export interface ResetPasswordValues extends ResetPasswordPayload {
+  confirmPassword: string
+}
+
+export type ResetPasswordField = keyof ResetPasswordValues
+
+export type ResetPasswordErrors = Partial<Record<ResetPasswordField, string>>
+
+export type ResetPasswordStatus = 'idle' | 'submitting' | 'success'
+
+export type RequestResetStatus = 'idle' | 'sending' | 'sent' | 'error'

@@ -10,10 +10,16 @@ import { cn } from '@/lib/utils'
 interface SidebarUserProps {
   collapsed: boolean
   onNavigate?: () => void
+  /** Destino al pulsar la tarjeta; en el panel apunta al perfil de administrador. */
+  profilePath?: string
 }
 
 /** Tarjeta de usuario al pie del sidebar: avatar, nombre, correo y cerrar sesión. */
-export function SidebarUser({ collapsed, onNavigate }: SidebarUserProps) {
+export function SidebarUser({
+  collapsed,
+  onNavigate,
+  profilePath = ROUTES.profile,
+}: SidebarUserProps) {
   const { data: profile, isPending } = useProfile()
   const navigate = useNavigate()
 
@@ -27,7 +33,7 @@ export function SidebarUser({ collapsed, onNavigate }: SidebarUserProps) {
   return (
     <div className={cn('flex items-center gap-1.5', collapsed && 'lg:justify-center')}>
       <Link
-        to={ROUTES.profile}
+        to={profilePath}
         onClick={onNavigate}
         title={name}
         className={cn(

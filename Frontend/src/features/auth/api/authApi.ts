@@ -1,9 +1,12 @@
 import { http } from '@/config'
 
 import type {
+  EmailActionResponse,
   LoginCredentials,
   RegisterPayload,
   RegisterResponse,
+  ResetPasswordPayload,
+  ResetTokenResponse,
   ResendVerificationResponse,
   VerifyEmailResponse,
 } from '../types'
@@ -53,4 +56,40 @@ export async function resendVerification(email: string): Promise<void> {
   await http.post<ResendVerificationResponse>('/api/email/update', null, {
     params: { email: email.trim() },
   })
+}
+
+/**
+ * `POST /api/email/reset/email?email=…` — genera un token de recuperación
+ * y envía al correo el enlace a `/reset-password?token=…`.
+ */
+export async function requestPasswordReset(email: string): Promise<EmailActionResponse> {
+  const { data } = await http.post<EmailActionResponse>('/api/email/reset/email', null, {
+    params: { email: email.trim() },
+  })
+
+  return data
+}
+
+/** `GET /api/email/reset/token/expiration?token=…` — comprueba que el enlace siga vigente. */
+export async function validateResetToken(token: string): Promise<ResetTokenResponse> {
+  const { data } = await http.get<ResetTokenResponse>('/api/email/reset/token/expiration', {
+    params: { token },
+  })
+
+  return data
+}
+
+/**
+ * `POST /api/email/rest/verify?token=…` con `{ email, password }`.
+ * El correo debe coincidir con el dueño del token.
+ */
+export async function resetPassword(
+  token: string,
+  payload: ResetPasswordPayload,
+): Promise<EmailActionResponse> {
+  const { data } = await http.post<EmailActionResponse>('/api/email/rest/verify', payload, {
+    params: { token },
+  })
+
+  return data
 }

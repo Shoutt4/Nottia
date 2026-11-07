@@ -1,6 +1,6 @@
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
-import { ChevronRightIcon } from '@/components/ui/icons'
+import { ChevronRightIcon, ShieldIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/ui/Reveal'
 import { getErrorMessage } from '@/lib/errors'
 import { toast } from '@/lib/toast'
@@ -12,8 +12,16 @@ import { ProfileSkeleton } from '../components/ProfileSkeleton'
 import { useProfile } from '../hooks/useProfile'
 import { formatDate, fullName } from '../lib/format'
 
-/** Información de la cuenta: datos reales desde `GET /api/usuarios/me`. */
-export function ProfilePage() {
+interface ProfilePageProps {
+  /** Variante del panel de administración: muestra el rol y su nivel de acceso. */
+  admin?: boolean
+}
+
+/**
+ * Información de la cuenta: datos reales desde `GET /api/usuarios/me`.
+ * Con `admin`, adapta el encabezado, el rol y la tarjeta de acceso al panel.
+ */
+export function ProfilePage({ admin = false }: ProfilePageProps) {
   const { data: profile, isPending, isError, isFetching, error, refetch } = useProfile()
 
   const name = fullName(profile) || profile?.email || 'Tu cuenta'
@@ -26,29 +34,31 @@ export function ProfilePage() {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper-line pb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">
             <span className="flex items-center gap-2">
               <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-paper-accent" />
-              Archivo personal
+              {admin ? 'Ficha de administrador' : 'Archivo personal'}
             </span>
 
             <nav
               aria-label="Ruta"
               className="flex items-center gap-1.5 text-[9px] tracking-[0.16em]"
             >
-              <span>Cuenta</span>
+              <span>{admin ? 'Administrador' : 'Cuenta'}</span>
               <ChevronRightIcon className="h-3 w-3 text-paper-accent/60" />
-              <span className="text-paper-ink">Resumen</span>
+              <span className="text-paper-ink">{admin ? 'Perfil' : 'Resumen'}</span>
             </nav>
           </div>
 
           <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
             <div className="min-w-0">
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-paper-accent">
-                Ficha personal
+                {admin ? 'Nivel de acceso' : 'Ficha personal'}
               </p>
               <h1 className="mt-2 max-w-3xl font-serif text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-paper-ink sm:text-5xl">
-                Información de la cuenta
+                {admin ? 'Perfil del administrador' : 'Información de la cuenta'}
               </h1>
               <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-paper-muted">
-                Tus datos personales y el estado de tu cuenta.
+                {admin
+                  ? 'Tus datos personales y el nivel de acceso al panel.'
+                  : 'Tus datos personales y el estado de tu cuenta.'}
               </p>
             </div>
 
@@ -87,7 +97,35 @@ export function ProfilePage() {
             ) : (
               <div className="space-y-5">
                 <Reveal delay={60}>
-                  <PlanCard />
+                  {admin ? (
+                    <section className="relative overflow-hidden rounded-[4px] border border-paper-line bg-desk/40 p-5 sm:p-6">
+                      <span aria-hidden className="absolute inset-y-0 left-0 w-[3px] bg-paper-accent/70" />
+
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper-muted">
+                            Acceso al panel
+                          </p>
+                          <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                            <h2 className="font-serif text-2xl font-semibold tracking-[-0.01em] text-paper-ink">
+                              Administrador
+                            </h2>
+                            <span className="inline-flex items-center gap-1 rounded-full border border-paper-accent/30 bg-paper-accent/10 px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-paper-accent">
+                              <ShieldIcon className="h-3 w-3" />
+                              ADMIN
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="mt-2 max-w-lg text-xs leading-relaxed text-paper-muted">
+                        Puedes consultar las cuentas registradas y gestionar el panel de
+                        administración de Nottia.
+                      </p>
+                    </section>
+                  ) : (
+                    <PlanCard />
+                  )}
                 </Reveal>
 
                 <Reveal delay={120}>
@@ -123,6 +161,7 @@ export function ProfilePage() {
                           label="Teléfono"
                           value={profile.phone ?? 'Sin registrar'}
                         />
+                        {admin && <ProfileField label="Rol" value="Administrador" />}
                         <ProfileField
                           label="Miembro desde"
                           value={formatDate(profile.createAt)}
@@ -138,7 +177,9 @@ export function ProfilePage() {
                       aria-hidden
                       className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-paper-accent"
                     />
-                    Estos datos se obtienen directamente de tu cuenta en Nottia.
+                    {admin
+                      ? 'Estos datos se obtienen de tu cuenta de administrador en Nottia.'
+                      : 'Estos datos se obtienen directamente de tu cuenta en Nottia.'}
                   </p>
                 </Reveal>
               </div>

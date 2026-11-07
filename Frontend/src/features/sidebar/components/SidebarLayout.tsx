@@ -1,12 +1,15 @@
 import { useState } from 'react'
-import { Outlet, useMatch } from 'react-router-dom'
+import { Outlet, useLocation, useMatch } from 'react-router-dom'
 
 import { LogoWordmark } from '@/components/brand/LogoWordmark'
-import { MenuIcon } from '@/components/ui/icons'
+import { MenuIcon, ShieldIcon } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { getCurrentUser } from '@/config'
 import { ROUTES } from '@/config/routes'
 import { cn } from '@/lib/utils'
 
+import { adminNavItems, navItems } from '../lib/navItems'
+import type { NavItem } from '../types'
 import { Sidebar } from './Sidebar'
 
 /**
@@ -15,6 +18,25 @@ import { Sidebar } from './Sidebar'
  */
 export function SidebarLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { pathname } = useLocation()
+  const isAdminArea = pathname === ROUTES.admin || pathname.startsWith(`${ROUTES.admin}/`)
+  const isAdmin = getCurrentUser().role === 'ADMIN'
+  // En el panel solo se muestran sus secciones; fuera de él, un admin conserva
+  // el acceso al panel y su "Perfil" apunta a la variante de administrador.
+  const adminShortcut: NavItem = {
+    to: ROUTES.adminUsers,
+    label: 'Administración',
+    Icon: ShieldIcon,
+  }
+  const adminAreaItems = navItems.map((item) =>
+    item.to === ROUTES.profile ? { ...item, to: ROUTES.adminProfile } : item,
+  )
+  const items: NavItem[] = isAdminArea
+    ? adminNavItems
+    : isAdmin
+      ? [...adminAreaItems, adminShortcut]
+      : navItems
+
   // El editor de notas y el diseñador de portadas ocupan el alto disponible y
   // gestionan su propio scroll.
   const isNoteEditor = useMatch(`${ROUTES.notes}/:noteId`) !== null
@@ -40,7 +62,15 @@ export function SidebarLayout() {
         </div>
       </div>
 
-      <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
+        items={items}
+        homePath={isAdminArea || isAdmin ? ROUTES.adminUsers : ROUTES.dashboard}
+        profilePath={isAdminArea || isAdmin ? ROUTES.adminProfile : ROUTES.profile}
+        navLabel={isAdminArea ? 'Administración' : 'Índice'}
+        subtitle={isAdminArea ? 'Panel de control' : 'Cuaderno de ideas'}
+      />
 
       <div className="min-w-0 flex-1">
         <main

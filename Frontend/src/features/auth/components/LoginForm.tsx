@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { ArrowRightIcon, CheckIcon, LockIcon, MailIcon } from '@/components/ui/icons'
+import { getCurrentUser } from '@/config'
 import { ROUTES, resendVerificationPath } from '@/config/routes'
 
 import { useLoginForm } from '../hooks/useLoginForm'
@@ -33,8 +34,9 @@ export function LoginForm() {
       return
     }
 
-    // Deja ver el "¡Listo!" un instante antes de entrar.
-    window.setTimeout(() => navigate(ROUTES.dashboard), 400)
+    // Deja ver el "¡Listo!" un instante antes de entrar al área del rol.
+    const target = getCurrentUser().role === 'ADMIN' ? ROUTES.adminUsers : ROUTES.dashboard
+    window.setTimeout(() => navigate(target), 400)
   }
 
   return (

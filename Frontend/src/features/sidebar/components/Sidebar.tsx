@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 
 import { useSidebar } from '../hooks/useSidebar'
 import { navItems } from '../lib/navItems'
+import type { NavItem } from '../types'
 import { SidebarNavItem } from './SidebarNavItem'
 import { SidebarThemeToggle } from './SidebarThemeToggle'
 import { SidebarUser } from './SidebarUser'
@@ -15,13 +16,31 @@ interface SidebarProps {
   /** Drawer móvil abierto. */
   mobileOpen: boolean
   onCloseMobile: () => void
+  /** Enlaces visibles; por defecto, los de la app. */
+  items?: NavItem[]
+  /** Destino del logo. */
+  homePath?: string
+  /** Destino de la tarjeta de usuario. */
+  profilePath?: string
+  /** Título del índice. */
+  navLabel?: string
+  /** Subtítulo bajo la marca. */
+  subtitle?: string
 }
 
 /**
  * Menú lateral de la zona privada. En escritorio se contrae a un rail de íconos
  * (estado en `uiStore`); en móvil es un drawer que se desliza desde la izquierda.
  */
-export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
+export function Sidebar({
+  mobileOpen,
+  onCloseMobile,
+  items = navItems,
+  homePath = ROUTES.dashboard,
+  profilePath = ROUTES.profile,
+  navLabel = 'Índice',
+  subtitle = 'Cuaderno de ideas',
+}: SidebarProps) {
   const { collapsed, toggleSidebar } = useSidebar()
 
   return (
@@ -49,7 +68,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           )}
         >
           <Link
-            to={ROUTES.dashboard}
+            to={homePath}
             onClick={onCloseMobile}
             aria-label="Nottia, ir al inicio"
             className="group flex min-w-0 items-center gap-2.5 rounded-md p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-accent"
@@ -62,7 +81,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                 Nottia
               </span>
               <span className="mt-1.5 block truncate font-mono text-[8px] uppercase tracking-[0.16em] text-paper-muted">
-                Cuaderno de ideas
+                {subtitle}
               </span>
             </span>
           </Link>
@@ -98,12 +117,12 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
               collapsed && 'lg:hidden',
             )}
           >
-            <span>Índice</span>
+            <span>{navLabel}</span>
             <span aria-hidden className="h-px flex-1 bg-paper-line" />
           </p>
 
           <div className="space-y-1">
-            {navItems.map((item, index) => (
+            {items.map((item, index) => (
               <SidebarNavItem
                 key={item.to}
                 item={item}
@@ -120,7 +139,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           style={{ animationDelay: '120ms' }}
         >
           <SidebarThemeToggle collapsed={collapsed} />
-          <SidebarUser collapsed={collapsed} onNavigate={onCloseMobile} />
+          <SidebarUser
+            collapsed={collapsed}
+            onNavigate={onCloseMobile}
+            profilePath={profilePath}
+          />
         </div>
       </aside>
     </>

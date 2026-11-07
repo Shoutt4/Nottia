@@ -6,11 +6,15 @@ export const ROUTES = {
   verifyEmail: '/verify-email',
   resendVerification: '/reenviar-verificacion',
   forgotPassword: '/recuperar-contrasena',
+  resetPassword: '/reset-password',
   dashboard: '/dashboard',
   notebooks: '/cuadernos',
   notebookNew: '/cuadernos/nuevo',
   profile: '/perfil',
   notes: '/notas',
+  admin: '/admin',
+  adminUsers: '/admin/usuarios',
+  adminProfile: '/admin/perfil',
 } as const
 
 /** Ruta para reenviar la verificación, con el correo precargado si viene del login. */

@@ -1,11 +1,13 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { ROUTES } from '@/config/routes'
+import { AdminUsersPage } from '@/features/admin'
 import {
   ForgotPasswordPage,
   LoginPage,
   RegisterPage,
   ResendVerificationPage,
+  ResetPasswordPage,
   VerifyEmailPage,
 } from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
@@ -16,6 +18,7 @@ import { SidebarLayout } from '@/features/sidebar'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { LandingPage } from '@/pages/landing/LandingPage'
 
+import { AdminRoute } from './AdminRoute'
 import { ProtectedRoute } from './ProtectedRoute'
 import { PublicOnlyRoute } from './PublicOnlyRoute'
 
@@ -25,8 +28,9 @@ import { PublicOnlyRoute } from './PublicOnlyRoute'
  *   2. añade aquí su ruta (pública, o privada dentro de `SidebarLayout`),
  *   3. añade la constante en `config/routes.ts`.
  *
- * - `PublicOnlyRoute`: si ya hay sesión, redirige a `/dashboard`.
+ * - `PublicOnlyRoute`: si ya hay sesión, redirige al inicio de su rol.
  * - `ProtectedRoute` + `SidebarLayout`: zona privada con el menú lateral.
+ * - `AdminRoute`: el panel de administración exige el rol `ADMIN`.
  * - `/verify-email` va sin guardas: el enlace del correo debe abrirse con o sin sesión.
  */
 export const router = createBrowserRouter([
@@ -56,6 +60,21 @@ export const router = createBrowserRouter([
           { path: `${ROUTES.notes}/:noteId`, element: <NoteEditorPage /> },
         ],
       },
+      {
+        // El panel tiene su propio guard y reutiliza el shell con la navegación
+        // de administración (el `SidebarLayout` la detecta por la ruta).
+        element: <AdminRoute />,
+        children: [
+          {
+            element: <SidebarLayout />,
+            children: [
+              { path: ROUTES.admin, element: <Navigate to={ROUTES.adminUsers} replace /> },
+              { path: ROUTES.adminUsers, element: <AdminUsersPage /> },
+              { path: ROUTES.adminProfile, element: <ProfilePage admin /> },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -63,6 +82,11 @@ export const router = createBrowserRouter([
     // así que no va dentro de `PublicOnlyRoute` ni de `ProtectedRoute`.
     path: ROUTES.verifyEmail,
     element: <VerifyEmailPage />,
+  },
+  {
+    // El enlace de recuperación también llega desde el correo.
+    path: ROUTES.resetPassword,
+    element: <ResetPasswordPage />,
   },
   {
     path: '*',
