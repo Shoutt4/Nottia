@@ -70,4 +70,9 @@ public class EmailController {
 
     }
 
+    @GetMapping("/reset/token/expiration")
+    public ResponseEntity<Map<String, Object>> validarToken(@RequestParam String token) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(this.emailVerificationTokenService.verifiTokenExpirationPasword(token));
+    }
 }

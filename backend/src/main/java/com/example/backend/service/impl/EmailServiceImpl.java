@@ -12,6 +12,7 @@ import org.thymeleaf.context.Context;
 import com.example.backend.dtos.email.EmailDTO;
 import com.example.backend.exception.ErrorGlobal;
 import com.example.backend.service.EmailService;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -21,6 +22,7 @@ public class EmailServiceImpl implements EmailService {
     public EmailServiceImpl(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
+
     }
 
     @Override
@@ -48,11 +50,18 @@ public class EmailServiceImpl implements EmailService {
         try {
             MimeMessage mensaje = this.javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+
             helper.setTo(destinatario);
             helper.setSubject("Recuperación de Contraseña - Nottia");
-            String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+            String resetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/reset-password")
+                    .queryParam("token", token)
+                    .build()
+                    .encode()
+                    .toUriString();
+
             Context context = new Context();
-            String contenidoHtml = templateEngine.process("password-reset.html", context);
+            context.setVariable("resetUrl", resetUrl);
+            String contenidoHtml = templateEngine.process("password-reset", context);
             helper.setText(contenidoHtml, true);
             javaMailSender.send(mensaje);
         } catch (Exception e) {

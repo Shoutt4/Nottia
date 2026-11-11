@@ -82,6 +82,15 @@ public class EmailVerificationTokenService {
 
     }
 
+    public Map<String, Object> verifiTokenExpirationPasword(String token) {
+        if (this.emailVerificationTokenRepository.existsByResetTokenAndTokenResetExpirationAfter(token,
+                LocalDateTime.now())) {
+            return Map.of("succes", true, "message", "token valido");
+        } else {
+            throw new ErrorGlobal("token expirado", 400, false);
+        }
+    }
+
     public Map<String, Object> verificateTokenPasswordReset(String token, ResetPasswordResquestDTO resquestDTO) {
         if (token == null || resquestDTO.getEmail() == null) {
             throw new ErrorGlobal("token  o correo invalido", 400, false);

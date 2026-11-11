@@ -5,11 +5,15 @@ import com.example.backend.dtos.actividades.ActividadResponseDTO;
 import com.example.backend.entity.Actividades;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
 public interface ActividadMapper {
 
     @Mapping(target = "idUsuario", ignore = true)
+    @Mapping(target = "idActividad", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "nombreActividad", source = "nombreActividad")
     @Mapping(target = "descripcionActividad", source = "descripcionActividad")
     @Mapping(target = "fechaInicio", source = "fechaInicio")
@@ -23,5 +27,15 @@ public interface ActividadMapper {
     @Mapping(target = "fechaInicio", source = "fechaInicio")
     @Mapping(target = "fechaFin", source = "fechaFin")
     ActividadResponseDTO toResponseDTO(Actividades actividad);
+
+    @Mapping(target = "idActividad", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "idUsuario", ignore = true)
+    @Mapping(target = "nombreActividad", source = "nombreActividad")
+    @Mapping(target = "descripcionActividad", source = "descripcionActividad")
+    @Mapping(target = "fechaInicio", source = "fechaInicio")
+    @Mapping(target = "fechaFin", source = "fechaFin")
+    Actividades updateActividad(ActividadRequestDTIO requestDTIO, @MappingTarget Actividades entity);
 
 }

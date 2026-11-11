@@ -21,6 +21,7 @@ public interface EmailVerificationTokenRepository
         Optional<EmailVerificationToken> findByResetTokenAndUsuario_Email(
                         String tokenReset, String email);
 
-        boolean existsByResetTokenAndTokenResetExpirationGreaterThan(String token, LocalDateTime fecha);
+        boolean existsByResetTokenAndTokenResetExpirationAfter(String token,
+                        LocalDateTime fecha);
 
 }
