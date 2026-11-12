@@ -13,9 +13,7 @@ import lombok.Builder;
 @Data
 public class ActividadRequestDTIO {
 
-   
     private String nombreActividad;
     private String descripcionActividad;
-    private LocalDateTime fechaInicio;
-    private LocalDateTime fechaFin;
+    private String color;
 }

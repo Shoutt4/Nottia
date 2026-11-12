@@ -29,17 +29,11 @@ public class Actividades {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_actividad")
     private String idActividad;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
-    private Usuario idUsuario;
     @Column(name = "nombre_actividad")
     private String nombreActividad;
     @Column(name = "descripcion_actividad")
     private String descripcionActividad;
-    @Column(name = "fecha_inicio")
-    private LocalDateTime fechaInicio;
-    @Column(name = "fecha_fin")
-    private LocalDateTime fechaFin;
+    private String color;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

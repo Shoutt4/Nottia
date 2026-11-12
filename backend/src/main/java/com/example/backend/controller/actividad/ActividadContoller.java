@@ -39,7 +39,7 @@ public class ActividadContoller {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(this.actividadesService.saveActividad(actividadRequestDTIO));
     }
-
+/* 
     @PreAuthorize("hasRole('USUARIO')")
     @GetMapping("/all")
     public ResponseEntity<Page<ActividadResponseDTO>> getAllActividadesByUser(Pageable pageable) {
@@ -66,5 +66,5 @@ public class ActividadContoller {
     public ResponseEntity<Map<String, Object>> deleteActiviti(@Valid @PathVariable String id) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.actividadesService.deleteActividad(id));
     }
-
+*/
 }

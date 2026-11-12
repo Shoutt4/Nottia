@@ -10,32 +10,27 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
 public interface ActividadMapper {
 
-    @Mapping(target = "idUsuario", ignore = true)
     @Mapping(target = "idActividad", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "nombreActividad", source = "nombreActividad")
     @Mapping(target = "descripcionActividad", source = "descripcionActividad")
-    @Mapping(target = "fechaInicio", source = "fechaInicio")
-    @Mapping(target = "fechaFin", source = "fechaFin")
+    @Mapping(target = "color", source = "color")
     Actividades toEntity(ActividadRequestDTIO actividadRequestDTIO);
 
     @Mapping(target = "idActividad", source = "idActividad")
-    @Mapping(target = "idUsuario", source = "idUsuario.idUsuario")
     @Mapping(target = "nombreActividad", source = "nombreActividad")
     @Mapping(target = "descripcionActividad", source = "descripcionActividad")
-    @Mapping(target = "fechaInicio", source = "fechaInicio")
-    @Mapping(target = "fechaFin", source = "fechaFin")
+    @Mapping(target = "color", source = "color")
     ActividadResponseDTO toResponseDTO(Actividades actividad);
 
     @Mapping(target = "idActividad", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "idUsuario", ignore = true)
     @Mapping(target = "nombreActividad", source = "nombreActividad")
     @Mapping(target = "descripcionActividad", source = "descripcionActividad")
-    @Mapping(target = "fechaInicio", source = "fechaInicio")
-    @Mapping(target = "fechaFin", source = "fechaFin")
+    @Mapping(target = "color", source = "color")
+
     Actividades updateActividad(ActividadRequestDTIO requestDTIO, @MappingTarget Actividades entity);
 
 }

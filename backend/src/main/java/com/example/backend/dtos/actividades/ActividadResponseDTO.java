@@ -13,11 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class ActividadResponseDTO {
     private String idActividad;
-    private String idUsuario;
     private String nombreActividad;
     private String descripcionActividad;
-    private LocalDateTime fechaInicio;
-    private LocalDateTime fechaFin;
+    private String color;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

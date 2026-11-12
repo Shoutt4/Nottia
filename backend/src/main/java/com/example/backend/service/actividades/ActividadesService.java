@@ -31,19 +31,15 @@ public class ActividadesService {
     public ActividadResponseDTO saveActividad(ActividadRequestDTIO actividadRequestDTIO) {
         if (this.authRepository.existsById(this.currentUserService.getCurrentUserId())) {
             Actividades actividad = this.actividadMapper.toEntity(actividadRequestDTIO);
-            Usuario usuario = this.authRepository.findById(this.currentUserService.getCurrentUserId()).orElseThrow();
-            actividad.setIdUsuario(usuario);
             return this.actividadMapper.toResponseDTO(this.actividadRespository.save(actividad));
         } else {
             throw new ErrorGlobal("error  usuario no encotrado", 404, false);
         }
     }
-
+/* 
     public Page<ActividadResponseDTO> getAllActiviadedesByUser(Pageable pageable) {
         if (this.authRepository.existsById(this.currentUserService.getCurrentUserId())) {
-            return this.actividadRespository
-                    .findByIdUsuario_IdUsuario(this.currentUserService.getCurrentUserId(), pageable)
-                    .map((p) -> this.actividadMapper.toResponseDTO(p));
+       
         }
         throw new ErrorGlobal("error  usuario no encotrado", 404, false);
     }
@@ -52,7 +48,7 @@ public class ActividadesService {
         if (this.actividadRespository.existsByIdActividadAndIdUsuario_IdUsuario(idActividad,
                 this.currentUserService.getCurrentUserId())) {
             return this.actividadMapper.toResponseDTO(
-                    this.actividadRespository.findByIdActividadesAndIdUsuario_IdUsuario(idActividad,
+                    this.actividadRespository.findByIdActividadAndIdUsuario_IdUsuario(idActividad,
                             this.currentUserService.getCurrentUserId()));
         } else {
             throw new ErrorGlobal("actividad no existente", 404, false);
@@ -63,7 +59,7 @@ public class ActividadesService {
     public ActividadResponseDTO updateActividad(String idActividad, ActividadRequestDTIO actividadRequestDTIO) {
         if (this.actividadRespository.existsByIdActividadAndIdUsuario_IdUsuario(idActividad,
                 this.currentUserService.getCurrentUserId())) {
-            Actividades actividades = this.actividadRespository.findByIdActividadesAndIdUsuario_IdUsuario(idActividad,
+            Actividades actividades = this.actividadRespository.findByIdActividadAndIdUsuario_IdUsuario(idActividad,
                     this.currentUserService.getCurrentUserId());
             this.actividadMapper.updateActividad(actividadRequestDTIO, actividades);
             return this.actividadMapper.toResponseDTO(this.actividadRespository.save(actividades));
@@ -83,5 +79,5 @@ public class ActividadesService {
             throw new ErrorGlobal("error actividad no existente", 404, false);
         }
     }
-
+*/
 }
