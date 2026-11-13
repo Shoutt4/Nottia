@@ -57,9 +57,6 @@ public class Usuario implements UserDetails {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_palnificacion", referencedColumnName = "idPlanificacionSemana")
-    private PlanificacionSemana planificacion;
     @CreationTimestamp
     private Date createAt;
     @UpdateTimestamp

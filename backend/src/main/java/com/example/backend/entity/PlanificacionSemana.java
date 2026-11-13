@@ -5,9 +5,15 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.backend.dtos.actividades.DiaSemana;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,12 +37,13 @@ public class PlanificacionSemana {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idPlanificacionSemana;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_actividad", nullable = false)
     private Actividades actividad;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_dia_semana", nullable = false)
+    @Enumerated(EnumType.STRING)
     private DiaSemana diaSemana;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
     private LocalTime horaInicio;
     private LocalTime horaFin;
