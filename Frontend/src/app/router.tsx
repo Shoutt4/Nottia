@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { ROUTES } from '@/config/routes'
+import { ActivitiesPage, ActivitySharePage } from '@/features/activities'
 import { AdminUsersPage } from '@/features/admin'
 import {
   ForgotPasswordPage,
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
         element: <SidebarLayout />,
         children: [
           { path: ROUTES.dashboard, element: <HomePage /> },
+          { path: ROUTES.activities, element: <ActivitiesPage /> },
           { path: ROUTES.notebooks, element: <NotebooksPage /> },
           { path: ROUTES.notebookNew, element: <NotebookDesignerPage /> },
           { path: `${ROUTES.notebooks}/:notebookId/notas`, element: <NotebookNotesPage /> },
@@ -87,6 +89,11 @@ export const router = createBrowserRouter([
     // El enlace de recuperación también llega desde el correo.
     path: ROUTES.resetPassword,
     element: <ResetPasswordPage />,
+  },
+  {
+    // Vista pública de la planificación: el enlace lleva los datos dentro.
+    path: ROUTES.activitiesShare,
+    element: <ActivitySharePage />,
   },
   {
     path: '*',

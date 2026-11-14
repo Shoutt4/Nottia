@@ -128,6 +128,27 @@ export function ImageIcon(props: IconProps) {
   )
 }
 
+export function DownloadIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3v12" />
+      <path d="m7.5 10.5 4.5 4.5 4.5-4.5" />
+      <path d="M5 20h14" />
+    </Icon>
+  )
+}
+
+export function PrinterIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 3.5h10V8H7z" />
+      <rect x="4" y="8" width="16" height="8" rx="2" />
+      <path d="M7 16h10v4.5H7z" />
+      <path d="M17 11h.01" />
+    </Icon>
+  )
+}
+
 export function SparkleIcon(props: IconProps) {
   return (
     <Icon {...props}>

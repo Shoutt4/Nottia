@@ -10,6 +10,8 @@ export const ROUTES = {
   dashboard: '/dashboard',
   notebooks: '/cuadernos',
   notebookNew: '/cuadernos/nuevo',
+  activities: '/actividades',
+  activitiesShare: '/actividades/compartir',
   profile: '/perfil',
   notes: '/notas',
   admin: '/admin',
