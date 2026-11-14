@@ -1,5 +1,7 @@
 package com.example.backend.service.actividades;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,30 @@ public class PlanificacionSemanaService {
         PlanificacionSemana pn = this.planificacionMapper.toSave(requestDTO);
         pn.setUsuario(usuario);
         return this.planificacionMapper.toResponse(this.planificacionSemanaRepository.save(pn));
+    }
+
+    public List<PlanificacionSemanaResponseDTO> saveAll(List<PlanificacionSemanaRequestDTO> requestDTOs) {
+        Usuario usuario = this.authRepository.findById(this.currentUserService.getCurrentUserId()).orElseThrow(
+                () -> new ErrorGlobal("usuario invalido", 404, false));
+
+        List<PlanificacionSemana> planificacionSemanas = requestDTOs.stream()
+                .map((p) -> {
+                    PlanificacionSemana planificacionSemana = this.planificacionMapper.toSave(p);
+                    planificacionSemana.setUsuario(usuario);
+                    return planificacionSemana;
+                }).toList();
+        return this.planificacionSemanaRepository.saveAll(planificacionSemanas).stream()
+                .map((p) -> this.planificacionMapper.toResponse(p)).toList();
+    }
+
+    public PlanificacionSemanaResponseDTO updatePlanificacion(String idPlanificacion,
+            PlanificacionSemanaRequestDTO requestDTO) {
+        PlanificacionSemana planificacionSemana = this.planificacionSemanaRepository
+                .findByIdPlanificacionSemanaAndUsuario_IdUsuario(idPlanificacion, currentUserService.getCurrentUserId())
+                .orElseThrow(
+                        () -> new ErrorGlobal("error id no ecnotrado", 407, false));
+        return planificacionMapper.toResponse(
+                this.planificacionSemanaRepository.save(planificacionMapper.toUpdate(requestDTO, planificacionSemana)));
+
     }
 }
