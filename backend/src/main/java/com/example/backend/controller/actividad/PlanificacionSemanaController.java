@@ -58,4 +58,11 @@ public class PlanificacionSemanaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(this.planificacionSemanaService.updatePlanificacion(id, requestDTO));
     }
+
+    @PreAuthorize("hasRole('USUARIO')")
+    @PostMapping("/{id}")
+
+    public ResponseEntity<PlanificacionSemanaResponseDTO> getById(@Valid @PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.planificacionSemanaService.getPlanificacion(id));
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.backend.service.actividades;
 
+import java.security.PublicKey;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,7 +17,6 @@ import com.example.backend.repository.actividades.PlanificacionSemanaRepository;
 import com.example.backend.repository.auth.AuthRepository;
 import com.example.backend.service.auth.CurrentUserService;
 
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -68,5 +68,24 @@ public class PlanificacionSemanaService {
         return planificacionMapper.toResponse(
                 this.planificacionSemanaRepository.save(planificacionMapper.toUpdate(requestDTO, planificacionSemana)));
 
+    }
+
+    public PlanificacionSemanaResponseDTO getPlanificacion(String idPlanificacion) {
+
+        PlanificacionSemana planificacionSemana = this.planificacionSemanaRepository
+                .findByIdPlanificacionSemanaAndUsuario_IdUsuario(idPlanificacion,
+                        this.currentUserService.getCurrentUserId())
+                .orElseThrow(() -> new ErrorGlobal("no existe ningund dato con id : " + idPlanificacion, 404, false));
+        return this.planificacionMapper.toResponse(planificacionSemana);
+    }
+
+    public List<PlanificacionSemanaResponseDTO> getPlanificacionSemanaPublic(String idUsuario) {
+
+        if (this.planificacionSemanaRepository.countByUsuario_idUsuario(idUsuario) > 0) {
+            return this.planificacionSemanaRepository.findByUsuario_IdUsuarioOrderByDiaSemanaAsc(idUsuario)
+                    .stream().map((p) -> this.planificacionMapper.toResponse(p)).toList();
+        } else {
+            throw new ErrorGlobal("no existe ningun dato para esta plainifcacion de semana", 404, false);
+        }
     }
 }

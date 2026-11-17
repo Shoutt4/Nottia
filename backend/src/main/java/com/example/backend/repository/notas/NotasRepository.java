@@ -1,5 +1,7 @@
 package com.example.backend.repository.notas;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.repository.query.JpqlQueryBuilder.Select;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.backend.dtos.notas.NotasResponse;
 import com.example.backend.entity.Nota;
 
 import jakarta.transaction.Transactional;
@@ -22,6 +25,8 @@ public interface NotasRepository extends JpaRepository<Nota, String> {
     Nota findByIdNotaAndIdUsuario_IdUsuario(String idNota, String idUsuario);
 
     boolean existsByIdNotaAndIdUsuario_IdUsuario(String idNota, String idUsuario);
+
+    Optional<Nota> findByIdNota(String idNota);
 
     @Transactional
     @Modifying

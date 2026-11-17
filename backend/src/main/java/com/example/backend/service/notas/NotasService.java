@@ -1,5 +1,6 @@
 package com.example.backend.service.notas;
 
+import com.example.backend.mapper.nota.NotaMapperImpl;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class NotasService {
+    private final NotaMapperImpl notaMapperImpl;
     private final NotasRepository notasRepository;
     private final JwtService jwtService;
     private final CuadernoRepository cuadernoRepository;
@@ -28,12 +30,13 @@ public class NotasService {
     private final SaveNotaMapper saveNotaMapper;
 
     public NotasService(NotasRepository notasRepository, JwtService jwtService, CuadernoRepository cuadernoRepository,
-            NotaMapper nMapper, SaveNotaMapper saveNotaMapper) {
+            NotaMapper nMapper, SaveNotaMapper saveNotaMapper, NotaMapperImpl notaMapperImpl) {
         this.notasRepository = notasRepository;
         this.jwtService = jwtService;
         this.cuadernoRepository = cuadernoRepository;
         this.mapperNota = nMapper;
         this.saveNotaMapper = saveNotaMapper;
+        this.notaMapperImpl = notaMapperImpl;
     }
 
     public NotasResponse responseNotas(Nota nota) {
@@ -122,6 +125,12 @@ public class NotasService {
         } else {
             throw new ErrorGlobal("cuaderno no existente ", 404, false);
         }
+    }
+
+    public NotasResponse findById(String idNota) {
+        Nota nota = this.notasRepository.findByIdNota(idNota).orElseThrow(
+                () -> new ErrorGlobal("id nota no existent :", 404, false));
+        return responseNotas(nota);
     }
 
 }
