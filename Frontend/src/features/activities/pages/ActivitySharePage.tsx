@@ -9,9 +9,11 @@ import { ROUTES } from '@/config/routes'
 import { getErrorMessage } from '@/lib/errors'
 import { toast } from '@/lib/toast'
 
+import { ActivitiesLoading } from '../components/ActivitiesLoading'
 import { ScheduleBoard } from '../components/ScheduleBoard'
+import { usePublicActivities } from '../hooks/useActivities'
 import { downloadScheduleImage } from '../lib/scheduleImage'
-import { readSharePayload, sharedToActivity } from '../lib/share'
+import { decodeShareUserId } from '../lib/share'
 import { todayLabel } from '../lib/time'
 
 const PRINT_STYLE = `
@@ -39,12 +41,19 @@ const PRINT_STYLE = `
 /** Vista pública de solo lectura que se abre desde «Compartir». */
 export function ActivitySharePage() {
   const [searchParams] = useSearchParams()
-  const payload = useMemo(() => readSharePayload(searchParams.get('data')), [searchParams])
-  const activities = useMemo(
-    () => payload?.activities.map((activity, index) => sharedToActivity(activity, index)) ?? [],
-    [payload],
+  const encodedUserId = searchParams.get('usuario')
+  const userId = useMemo(
+    () => (encodedUserId ? decodeShareUserId(encodedUserId) : null),
+    [encodedUserId],
   )
+  const activitiesQuery = usePublicActivities(userId)
+  const activities = activitiesQuery.data ?? []
   const shouldPrint = searchParams.get('print') === '1'
+  const hasLink = Boolean(userId)
+  const loadError =
+    activitiesQuery.isError && activitiesQuery.data === undefined
+      ? getErrorMessage(activitiesQuery.error)
+      : null
 
   useEffect(() => {
     if (!shouldPrint || activities.length === 0) return
@@ -55,7 +64,7 @@ export function ActivitySharePage() {
 
   const handleDownload = async () => {
     try {
-      await downloadScheduleImage(activities, payload?.title ?? 'Mi semana')
+      await downloadScheduleImage(activities, 'Mi semana')
       toast.success('Imagen descargada.')
     } catch (error) {
       toast.error(getErrorMessage(error instanceof Error ? error : null))
@@ -82,7 +91,32 @@ export function ActivitySharePage() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 print:max-w-none print:p-0">
-        {payload ? (
+        {!hasLink || loadError ? (
+          <div className="grid min-h-[68dvh] place-items-center">
+            <div className="w-full max-w-md rounded-3xl border border-line bg-surface px-6 py-10 text-center">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+                {loadError ? 'Vista no disponible' : 'Enlace no disponible'}
+              </p>
+              <h1
+                className="mt-3 text-3xl font-semibold tracking-[-0.02em] text-ink"
+                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              >
+                {loadError
+                  ? 'No pudimos cargar esta planificación'
+                  : 'No encontramos esta planificación'}
+              </h1>
+              <p className="mx-auto mt-3 max-w-sm text-sm text-pretty text-muted">
+                {loadError ??
+                  'Abre la vista desde tu cuenta o pide un enlace nuevo para compartir la semana.'}
+              </p>
+              <Link to={ROUTES.home} className={buttonClass('primary', 'mt-6')}>
+                Ir a Nottia
+              </Link>
+            </div>
+          </div>
+        ) : activitiesQuery.isPending ? (
+          <ActivitiesLoading />
+        ) : (
           <>
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between print:mb-4">
               <div>
@@ -93,7 +127,7 @@ export function ActivitySharePage() {
                   className="mt-3 text-4xl font-semibold leading-[0.95] tracking-[-0.03em] text-ink sm:text-5xl"
                   style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
                 >
-                  {payload.title || 'Mi semana'}
+                  Mi semana
                 </h1>
                 <p className="mt-3 text-sm text-muted">
                   {todayLabel()} · {activities.length}{' '}
@@ -134,33 +168,13 @@ export function ActivitySharePage() {
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
               <p className="text-[11px] text-muted">
-                El enlace contiene esta planificación y no necesita iniciar sesión.
+                Este enlace muestra esta planificación y no necesita iniciar sesión.
               </p>
               <Link to={ROUTES.home} className={buttonClass('ghost', 'text-xs')}>
                 Volver a Nottia
               </Link>
             </div>
           </>
-        ) : (
-          <div className="grid min-h-[68dvh] place-items-center">
-            <div className="w-full max-w-md rounded-3xl border border-line bg-surface px-6 py-10 text-center">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-                Enlace no disponible
-              </p>
-              <h1
-                className="mt-3 text-3xl font-semibold tracking-[-0.02em] text-ink"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-              >
-                No encontramos esta planificación
-              </h1>
-              <p className="mx-auto mt-3 max-w-sm text-sm text-pretty text-muted">
-                Abre la vista desde tu cuenta o pide un enlace nuevo para compartir la semana.
-              </p>
-              <Link to={ROUTES.home} className={buttonClass('primary', 'mt-6')}>
-                Ir a Nottia
-              </Link>
-            </div>
-          </div>
         )}
       </main>
     </div>

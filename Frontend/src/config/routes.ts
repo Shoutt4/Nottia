@@ -14,6 +14,7 @@ export const ROUTES = {
   activitiesShare: '/actividades/compartir',
   profile: '/perfil',
   notes: '/notas',
+  noteShare: '/notas/compartir',
   admin: '/admin',
   adminUsers: '/admin/usuarios',
   adminProfile: '/admin/perfil',

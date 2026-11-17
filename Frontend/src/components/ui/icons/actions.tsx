@@ -18,6 +18,15 @@ export function PencilIcon(props: IconProps) {
   )
 }
 
+export function PinIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M9 3.5h6l-.8 5.1 2.8 2.9v1.9H7v-1.9l2.8-2.9L9 3.5Z" />
+      <path d="M12 13.4v7.1" />
+    </Icon>
+  )
+}
+
 export function MoreIcon(props: IconProps) {
   return (
     <Icon {...props}>

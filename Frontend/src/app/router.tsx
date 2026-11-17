@@ -13,7 +13,7 @@ import {
 } from '@/features/auth'
 import { HomePage } from '@/features/dashboard'
 import { NotebookDesignerPage, NotebooksPage } from '@/features/notebooks'
-import { NotebookNotesPage, NoteEditorPage } from '@/features/notes'
+import { NotebookNotesPage, NoteEditorPage, SharedNotePage } from '@/features/notes'
 import { ProfilePage } from '@/features/profile'
 import { SidebarLayout } from '@/features/sidebar'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
@@ -91,9 +91,14 @@ export const router = createBrowserRouter([
     element: <ResetPasswordPage />,
   },
   {
-    // Vista pública de la planificación: el enlace lleva los datos dentro.
+    // Vista pública de la planificación: el enlace lleva el id del usuario ofuscado.
     path: ROUTES.activitiesShare,
     element: <ActivitySharePage />,
+  },
+  {
+    // Vista pública de una nota: el enlace lleva el id de la nota ofuscado.
+    path: ROUTES.noteShare,
+    element: <SharedNotePage />,
   },
   {
     path: '*',

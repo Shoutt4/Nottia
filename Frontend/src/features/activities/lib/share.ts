@@ -1,49 +1,7 @@
 import { ROUTES } from '@/config/routes'
 
-import type { Activity, ApiDay } from '../types'
-import { isApiDay } from './days'
-
-export interface ShareActivity {
-  name: string
-  description: string
-  color: string
-  day: ApiDay
-  start: string
-  end: string
-}
-
-export interface SharePayload {
-  title: string
-  activities: ShareActivity[]
-}
-
-const STORAGE_KEY = 'nottia-actividades-share'
-
-export function toSharePayload(activities: Activity[], title = 'Mi semana'): SharePayload {
-  return {
-    title,
-    activities: activities.map((activity) => ({
-      name: activity.name,
-      description: activity.description,
-      color: activity.color,
-      day: activity.day,
-      start: activity.start,
-      end: activity.end,
-    })),
-  }
-}
-
-export function sharedToActivity(activity: ShareActivity, index: number): Activity {
-  return {
-    id: `share-${index}`,
-    name: activity.name,
-    description: activity.description,
-    color: activity.color,
-    day: activity.day,
-    start: activity.start,
-    end: activity.end,
-  }
-}
+const SHARE_KEY = 'nottia-week'
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function bytesToBase64Url(bytes: Uint8Array): string {
   let binary = ''
@@ -52,82 +10,46 @@ function bytesToBase64Url(bytes: Uint8Array): string {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-function base64UrlToText(value: string): string {
+function base64UrlToBytes(value: string): Uint8Array {
   const base64 = value.replace(/-/g, '+').replace(/_/g, '/')
   const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
   const binary = atob(padded)
-  const bytes = new Uint8Array(binary.length)
 
-  for (let index = 0; index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index)
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0))
+}
+
+function xorBytes(bytes: Uint8Array): Uint8Array {
+  const output = new Uint8Array(bytes.length)
+
+  for (let index = 0; index < bytes.length; index += 1) {
+    output[index] = bytes[index] ^ SHARE_KEY.charCodeAt(index % SHARE_KEY.length)
   }
 
-  return new TextDecoder().decode(bytes)
+  return output
 }
 
-export function encodeSharePayload(payload: SharePayload): string {
-  return bytesToBase64Url(new TextEncoder().encode(JSON.stringify(payload)))
+/** Ofusca el id para el enlace público; no es cifrado criptográfico. */
+function encodeShareUserId(userId: string): string {
+  return bytesToBase64Url(xorBytes(new TextEncoder().encode(userId)))
 }
 
-function parsePayload(json: string): SharePayload | null {
+/**
+ * Decodifica el id que viaja en el enlace público. El endpoint recibe después
+ * el UUID limpio, no el valor ofuscado.
+ */
+export function decodeShareUserId(value: string): string | null {
   try {
-    const parsed = JSON.parse(json) as SharePayload
-    if (!parsed || typeof parsed.title !== 'string' || !Array.isArray(parsed.activities)) {
-      return null
-    }
-
-    const activities = parsed.activities.filter(
-      (item) =>
-        item &&
-        typeof item.name === 'string' &&
-        typeof item.description === 'string' &&
-        typeof item.color === 'string' &&
-        typeof item.start === 'string' &&
-        typeof item.end === 'string' &&
-        isApiDay(item.day),
-    )
-
-    if (activities.length !== parsed.activities.length) return null
-    return { title: parsed.title, activities }
+    const userId = new TextDecoder().decode(xorBytes(base64UrlToBytes(value)))
+    return UUID_PATTERN.test(userId) ? userId : null
   } catch {
     return null
   }
 }
 
-export function decodeSharePayload(value: string): SharePayload | null {
-  try {
-    return parsePayload(base64UrlToText(value))
-  } catch {
-    return null
-  }
-}
-
-export function saveSharePayload(payload: SharePayload): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
-  } catch {
-    // Sin almacenamiento disponible: la URL sigue llevando los datos.
-  }
-}
-
-function readStoredSharePayload(): SharePayload | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? parsePayload(raw) : null
-  } catch {
-    return null
-  }
-}
-
-/** La URL manda; si no trae datos, usa el último guardado en este navegador. */
-export function readSharePayload(value: string | null): SharePayload | null {
-  return value === null ? readStoredSharePayload() : decodeSharePayload(value)
-}
-
-export function scheduleShareUrl(payload: SharePayload, print = false): string {
-  const data = encodeSharePayload(payload)
-  const query = `data=${data}${print ? '&print=1' : ''}`
-  return `${window.location.origin}${ROUTES.activitiesShare}?${query}`
+/** URL pública: `?usuario=<id ofuscado>`; la vista lo decodifica antes de llamar a la API. */
+export function scheduleShareUrl(userId: string, print = false): string {
+  const usuario = encodeShareUserId(userId)
+  return `${window.location.origin}${ROUTES.activitiesShare}?usuario=${usuario}${print ? '&print=1' : ''}`
 }
 
 /** Copia un texto con la Clipboard API y recurre a `execCommand`. */

@@ -1,7 +1,9 @@
 import { Logo } from '@/components/brand/Logo'
-import { SearchIcon } from '@/components/ui/icons'
+import { BellIcon, LinkIcon, SearchIcon } from '@/components/ui/icons'
 import { Reveal } from '@/components/ui/Reveal'
 import { cn } from '@/lib/utils'
+
+import { SectionHeading } from './SectionHeading'
 
 type Tone = 'accent' | 'amber' | 'danger' | 'mint'
 
@@ -33,32 +35,83 @@ function NoteCard({ tone, title, body, tag }: NoteCardProps) {
   )
 }
 
+const CHIPS = ['Notas', 'Listas', 'Calendario', 'Mapa', 'Kanban']
+
 /** Mockup de teléfono con la app Nottia (puramente decorativo). */
 export function Showcase() {
   return (
-    <section className="relative overflow-hidden px-5 pb-20 pt-20 sm:pb-24">
+    <section id="en-tu-bolsillo" className="relative overflow-hidden px-5 py-20 sm:py-24">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-paper-accent/20"
+      />
+
       <Reveal>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-accent">
-            En tu bolsillo
-          </p>
-          <h2 className="mt-3 text-balance font-serif text-3xl font-semibold tracking-[-0.02em] text-paper-ink sm:text-4xl">
-            Lo importante, siempre a mano.
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-pretty text-sm leading-relaxed text-paper-muted">
-            Una libreta que cabe en tu bolsillo y te sigue a todas partes.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="En tu bolsillo"
+          title="Lo importante, siempre a mano."
+          description="Una libreta que cabe en tu bolsillo y te sigue a todas partes. Las mismas notas, el mismo orden, otra pantalla."
+          align="center"
+        />
       </Reveal>
 
       <Reveal delay={120}>
-        <div className="relative mx-auto mt-12 w-[290px] sm:w-[320px]">
+        <div className="relative mx-auto mt-14 w-[290px] max-w-full sm:w-[320px]">
           <div
             aria-hidden
             className="absolute -inset-10 -z-10 rounded-[3rem] bg-paper-accent/10 blur-3xl"
           />
 
-          <div className="relative rounded-[2.75rem] border border-[#17131f] bg-[#241d38] p-2.5 shadow-[0_50px_90px_-40px_rgba(18,12,34,0.7)]">
+          <div
+            aria-hidden
+            className="absolute -left-40 top-24 hidden w-40 rotate-[-6deg] md:block"
+          >
+            <div
+              className="animate-float rounded-[4px] border border-[#e2d2b6] bg-[#f5eddc] p-3 shadow-[0_20px_40px_-24px_rgba(35,28,20,0.65)] motion-reduce:animate-none"
+              style={{ animationDelay: '1s' }}
+            >
+              <span className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.16em] text-[#8a7f70]">
+                <BellIcon className="h-3 w-3" />
+                Recordatorio
+              </span>
+              <p className="mt-2 font-serif text-sm font-semibold leading-tight text-[#2a241d]">
+                Revisar la lista
+                <br />
+                antes del viernes.
+              </p>
+              <span aria-hidden className="mt-3 block h-1 w-12 rounded-full bg-[#9a6b2f]/25" />
+            </div>
+          </div>
+
+          <div
+            aria-hidden
+            className="absolute -right-44 bottom-24 hidden w-44 rotate-[5deg] md:block"
+          >
+            <div
+              className="animate-float rounded-[4px] border border-[#c9d8cd] bg-[#e9f0e8] p-3 shadow-[0_20px_40px_-24px_rgba(35,28,20,0.65)] motion-reduce:animate-none"
+              style={{ animationDelay: '2.2s' }}
+            >
+              <span className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.16em] text-[#63836f]">
+                <LinkIcon className="h-3 w-3" />
+                Enlace público
+              </span>
+              <p className="mt-2 font-serif text-sm font-semibold leading-tight text-[#2a241d]">
+                Nota compartida
+              </p>
+              <p className="mt-1 text-[10px] leading-snug text-[#6b6156]">
+                Solo lectura. Tú decides qué se ve.
+              </p>
+            </div>
+          </div>
+
+          <div
+            aria-hidden
+            className="relative rounded-[2.75rem] border border-[#17131f] bg-[#241d38] p-2.5 shadow-[0_50px_90px_-40px_rgba(18,12,34,0.7)]"
+          >
+            <span
+              aria-hidden
+              className="absolute -right-2 -top-2 h-7 w-7 rounded-full border border-white/20 bg-[#3b3152] shadow-lg"
+            />
             <div className="relative overflow-hidden rounded-[2.25rem] bg-[#fbf7ee]">
               <div
                 aria-hidden
@@ -106,6 +159,19 @@ export function Showcase() {
               </div>
             </div>
           </div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={220}>
+        <div className="mx-auto mt-10 flex max-w-xl flex-wrap items-center justify-center gap-2">
+          {CHIPS.map((chip) => (
+            <span
+              key={chip}
+              className="rounded-full border border-paper-line bg-paper/70 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-paper-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+            >
+              {chip}
+            </span>
+          ))}
         </div>
       </Reveal>
     </section>

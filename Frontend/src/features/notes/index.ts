@@ -14,4 +14,5 @@ export {
 } from './hooks/useNotes'
 export { NotebookNotesPage } from './pages/NotebookNotesPage'
 export { NoteEditorPage } from './pages/NoteEditorPage'
+export { SharedNotePage } from './pages/SharedNotePage'
 export type { CreateNotePayload, Note, NotePage, UpdateNotePayload } from './types'

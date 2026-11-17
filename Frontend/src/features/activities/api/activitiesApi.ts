@@ -1,3 +1,5 @@
+import { isAxiosError } from 'axios'
+
 import { http } from '@/config'
 
 import { DEFAULT_ACTIVITY_COLOR } from '../lib/colors'
@@ -60,6 +62,23 @@ export async function fetchActivities(): Promise<ActivityPage> {
     size: first.size,
     total: first.totalElements,
     totalPages: first.totalPages,
+  }
+}
+
+/**
+ * `GET /api/public/panificacion/{idUsuario}`: planificación pública sin JWT.
+ * El backend responde 404 cuando el usuario no tiene bloques; se trata como vacío.
+ */
+export async function fetchPublicActivities(userId: string): Promise<Activity[]> {
+  try {
+    const { data } = await http.get<ActivityScheduleResponse[]>(
+      `/api/public/panificacion/${encodeURIComponent(userId)}`,
+    )
+
+    return sortActivities(data.map(toActivity))
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) return []
+    throw error
   }
 }
 

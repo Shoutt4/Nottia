@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { LinkIcon, NoteIcon, ShieldIcon } from '@/components/ui/icons'
+import { InfoIcon, LinkIcon, NoteIcon } from '@/components/ui/icons'
 import { toast } from '@/lib/toast'
 
 import { copyToClipboard, noteShareUrl } from '../lib/share'
@@ -17,8 +17,8 @@ const ITEM_CLASS =
 const ICON_WRAP_CLASS = 'mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-canvas text-muted'
 
 /**
- * Menú de compartir propio (sin la hoja del sistema): copiar el enlace de la
- * nota o su contenido como texto. Todo ocurre en el navegador.
+ * Menú de compartir propio (sin la hoja del sistema): copiar el enlace público
+ * de la nota o su contenido como texto.
  */
 export function ShareButton({ noteId, title, content }: ShareButtonProps) {
   const [open, setOpen] = useState(false)
@@ -116,7 +116,7 @@ export function ShareButton({ noteId, title, content }: ShareButtonProps) {
             <span className="min-w-0">
               <span className="block text-xs font-semibold text-ink">Copiar enlace</span>
               <span className="block text-[11px] leading-snug text-muted">
-                Para quien tenga acceso a la nota.
+                Para que cualquiera pueda leerla.
               </span>
             </span>
           </button>
@@ -134,8 +134,8 @@ export function ShareButton({ noteId, title, content }: ShareButtonProps) {
           </button>
 
           <p className="mt-1 flex items-start gap-1.5 border-t border-line px-2.5 pb-1 pt-2 text-[11px] leading-snug text-muted">
-            <ShieldIcon className="mt-px h-3.5 w-3.5 shrink-0" />
-            El enlace no es público: requiere iniciar sesión con una cuenta con acceso.
+            <InfoIcon className="mt-px h-3.5 w-3.5 shrink-0" />
+            El enlace es público: cualquiera que lo tenga puede leer la nota.
           </p>
         </div>
       )}

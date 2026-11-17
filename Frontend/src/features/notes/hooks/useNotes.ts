@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { fetchNote, fetchNotes, fetchNotesByNotebook } from '../api/notesApi'
+import { fetchNote, fetchNotes, fetchNotesByNotebook, fetchPublicNote } from '../api/notesApi'
 import type { NotePage } from '../types'
 
 /** Tamaño de página de la lista lateral del editor. */
@@ -22,6 +22,7 @@ export const notesKeys = {
   notebookPage: (notebookId: string, page: number, size: number, sort: string) =>
     [...notesKeys.notebookPages(), notebookId, page, size, sort] as const,
   detail: (id: string) => [...notesKeys.all, 'detail', id] as const,
+  public: (id: string | null) => [...notesKeys.all, 'public', id] as const,
 }
 
 /** Notas paginadas del usuario (`GET /api/notas/all`). */
@@ -60,6 +61,16 @@ export function useInfiniteNotes(size = NOTES_RAIL_PAGE_SIZE) {
       const loaded = allPages.reduce((count, page) => count + page.notes.length, 0)
       return loaded < lastPage.total ? allPages.length : undefined
     },
+    staleTime: 30_000,
+  })
+}
+
+/** Nota pública (`GET /api/public/nota/{id}`) para el enlace compartido. */
+export function usePublicNote(id: string | null) {
+  return useQuery({
+    queryKey: notesKeys.public(id),
+    queryFn: () => fetchPublicNote(id ?? ''),
+    enabled: id !== null,
     staleTime: 30_000,
   })
 }

@@ -2,16 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 
 import { DownloadIcon, LinkIcon, PrinterIcon } from '@/components/ui/icons'
 import { buttonClass } from '@/components/ui/buttonStyles'
+import { getCurrentUser } from '@/config'
 import { getErrorMessage } from '@/lib/errors'
 import { toast } from '@/lib/toast'
 
 import { downloadScheduleImage } from '../lib/scheduleImage'
-import {
-  copyText,
-  saveSharePayload,
-  scheduleShareUrl,
-  toSharePayload,
-} from '../lib/share'
+import { copyText, scheduleShareUrl } from '../lib/share'
 import type { Activity } from '../types'
 
 interface ScheduleShareMenuProps {
@@ -58,10 +54,21 @@ export function ScheduleShareMenu({ activities }: ScheduleShareMenuProps) {
     if (open) firstItemRef.current?.focus()
   }, [open])
 
+  const shareUrl = (print = false) => {
+    const userId = getCurrentUser().id
+    if (!userId) {
+      toast.error('No pudimos identificar tu cuenta. Vuelve a iniciar sesión.')
+      return null
+    }
+
+    return scheduleShareUrl(userId, print)
+  }
+
   const openShareTab = (print = false) => {
-    const payload = toSharePayload(activities)
-    saveSharePayload(payload)
-    window.open(scheduleShareUrl(payload, print), '_blank', 'noopener,noreferrer')
+    const url = shareUrl(print)
+    if (!url) return
+
+    window.open(url, '_blank', 'noopener,noreferrer')
     setOpen(false)
   }
 
@@ -77,11 +84,11 @@ export function ScheduleShareMenu({ activities }: ScheduleShareMenuProps) {
   }
 
   const copyLink = async () => {
-    const payload = toSharePayload(activities)
-    saveSharePayload(payload)
-    setOpen(false)
+    const url = shareUrl()
+    if (!url) return
 
-    const copied = await copyText(scheduleShareUrl(payload))
+    setOpen(false)
+    const copied = await copyText(url)
     if (copied) toast.success('Enlace copiado.')
     else toast.error('No pudimos copiar el enlace.')
   }
@@ -160,7 +167,7 @@ export function ScheduleShareMenu({ activities }: ScheduleShareMenuProps) {
             <span className="min-w-0">
               <span className="block text-xs font-semibold text-ink">Copiar enlace</span>
               <span className="block text-[11px] leading-snug text-muted">
-                Lleva la planificación dentro del enlace.
+                Muestra tu planificación sin iniciar sesión.
               </span>
             </span>
           </button>

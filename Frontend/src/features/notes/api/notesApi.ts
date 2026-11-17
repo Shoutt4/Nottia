@@ -8,6 +8,7 @@ import type {
   Note,
   NotePage,
   PageResponse,
+  PinNotaResponse,
   SaveNotaResponse,
   UpdateNotePayload,
 } from '../types'
@@ -44,6 +45,22 @@ export async function updateNoteRequest(id: string, payload: UpdateNotePayload):
 export async function fetchNote(id: string): Promise<Note> {
   const { data } = await http.get<NotaResponse>(`/api/notas/${encodeURIComponent(id)}`)
   return toNote(data)
+}
+
+/** `GET /api/public/nota/{id}` — lectura pública de una nota compartida. */
+export async function fetchPublicNote(id: string): Promise<Note> {
+  const { data } = await http.get<NotaResponse>(
+    `/api/public/nota/${encodeURIComponent(id)}`,
+  )
+  return toNote(data)
+}
+
+/** `PATCH /api/notas/update/{id}/fijado?estado=` — fija o desfija una nota. */
+export async function updateNotePinnedRequest(id: string, pinned: boolean): Promise<boolean> {
+  const { data } = await http.patch<PinNotaResponse>(
+    `/api/notas/update/${encodeURIComponent(id)}/fijado?estado=${pinned}`,
+  )
+  return data.succes
 }
 
 /**

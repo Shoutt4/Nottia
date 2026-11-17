@@ -5,10 +5,17 @@ import { buttonClass } from '@/components/ui/buttonStyles'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { ROUTES } from '@/config/routes'
 
+const LINKS = [
+  { href: '#como-funciona', label: 'Cómo funciona' },
+  { href: '#funciones', label: 'Funciones' },
+  { href: '#nosotros', label: 'Nosotros' },
+  { href: '#contacto', label: 'Contacto' },
+]
+
 export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-paper-line/70 bg-paper/85 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-5 sm:px-8">
+      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Link
           to={ROUTES.home}
           className="rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -16,6 +23,18 @@ export function Navbar() {
         >
           <LogoWordmark size={30} />
         </Link>
+
+        <div className="hidden items-center gap-6 lg:flex">
+          {LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper-muted transition-colors duration-200 hover:text-paper-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle />

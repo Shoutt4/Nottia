@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { InfiniteData } from '@tanstack/react-query'
+import type { InfiniteData, QueryClient } from '@tanstack/react-query'
 
-import { createNoteRequest, updateNoteRequest } from '../api/notesApi'
+import { createNoteRequest, updateNotePinnedRequest, updateNoteRequest } from '../api/notesApi'
 import type { CreateNotePayload, Note, NotePage, UpdateNotePayload } from '../types'
 import { notesKeys } from './useNotes'
 
@@ -20,6 +20,36 @@ function patchInfinite(
       notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
     })),
   }
+}
+
+/** Aplica un cambio de una nota a la caché del detalle y de las listas. */
+function patchNoteCaches(queryClient: QueryClient, id: string, patch: Partial<Note>) {
+  queryClient.setQueryData<Note>(notesKeys.detail(id), (current) =>
+    current ? { ...current, ...patch } : current,
+  )
+
+  queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.lists() }, (page) =>
+    page
+      ? {
+          ...page,
+          notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
+        }
+      : page,
+  )
+
+  queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.notebookPages() }, (page) =>
+    page
+      ? {
+          ...page,
+          notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
+        }
+      : page,
+  )
+
+  queryClient.setQueriesData<InfiniteData<NotePage>>(
+    { queryKey: notesKeys.infinites() },
+    (data) => patchInfinite(data, id, patch),
+  )
 }
 
 /** Crea una nota (`POST /api/notas/save`). */
@@ -52,32 +82,22 @@ export function useUpdateNote(id: string) {
         updatedAt: saved.updatedAt || new Date().toISOString(),
       }
 
-      queryClient.setQueryData<Note>(notesKeys.detail(id), (current) =>
-        current ? { ...current, ...patch } : current,
-      )
+      patchNoteCaches(queryClient, id, patch)
+    },
+  })
+}
 
-      queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.lists() }, (page) =>
-        page
-          ? {
-              ...page,
-              notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
-            }
-          : page,
-      )
+/** Fija o desfija una nota (`PATCH /api/notas/update/{id}/fijado`). */
+export function usePinNote(id: string) {
+  const queryClient = useQueryClient()
 
-      queryClient.setQueriesData<NotePage>({ queryKey: notesKeys.notebookPages() }, (page) =>
-        page
-          ? {
-              ...page,
-              notes: page.notes.map((note) => (note.id === id ? { ...note, ...patch } : note)),
-            }
-          : page,
-      )
-
-      queryClient.setQueriesData<InfiniteData<NotePage>>(
-        { queryKey: notesKeys.infinites() },
-        (data) => patchInfinite(data, id, patch),
-      )
+  return useMutation({
+    mutationFn: (pinned: boolean) => updateNotePinnedRequest(id, pinned),
+    onSuccess: (_result, pinned) => {
+      patchNoteCaches(queryClient, id, { pinned })
+      queryClient.invalidateQueries({ queryKey: notesKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: notesKeys.infinites() })
+      queryClient.invalidateQueries({ queryKey: notesKeys.notebookPages() })
     },
   })
 }

@@ -4,6 +4,7 @@ import {
   createActivitiesRequest,
   createActivityRequest,
   fetchActivities,
+  fetchPublicActivities,
   updateActivityRequest,
 } from '../api/activitiesApi'
 import type { ActivitySchedulePayload } from '../types'
@@ -11,6 +12,7 @@ import type { ActivitySchedulePayload } from '../types'
 export const activitiesKeys = {
   all: ['activities'] as const,
   list: () => [...activitiesKeys.all, 'list'] as const,
+  public: (userId: string | null) => [...activitiesKeys.all, 'public', userId] as const,
 }
 
 /** Planificación completa del usuario (`GET /api/planificacion/all`). */
@@ -18,6 +20,16 @@ export function useActivities() {
   return useQuery({
     queryKey: activitiesKeys.list(),
     queryFn: fetchActivities,
+    staleTime: 30_000,
+  })
+}
+
+/** Planificación pública de un usuario (`GET /api/public/panificacion/{id}`). */
+export function usePublicActivities(userId: string | null) {
+  return useQuery({
+    queryKey: activitiesKeys.public(userId),
+    queryFn: () => fetchPublicActivities(userId ?? ''),
+    enabled: userId !== null,
     staleTime: 30_000,
   })
 }

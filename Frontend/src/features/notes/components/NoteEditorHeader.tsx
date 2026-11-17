@@ -6,10 +6,14 @@ import {
   ExpandIcon,
   MinimizeIcon,
   MoreIcon,
+  PinIcon,
 } from '@/components/ui/icons'
 import { ROUTES } from '@/config/routes'
+import { getErrorMessage } from '@/lib/errors'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
+import { usePinNote } from '../hooks/useNoteMutations'
 import { ICON_BUTTON_CLASS } from '../lib/editorClasses'
 import { soon } from '../lib/soon'
 import type { Note } from '../types'
@@ -35,6 +39,20 @@ export function NoteEditorHeader({
   onToggleList,
   onToggleFullscreen,
 }: NoteEditorHeaderProps) {
+  const pinNote = usePinNote(note.id)
+
+  const togglePin = () => {
+    const nextPinned = !note.pinned
+    pinNote.mutate(nextPinned, {
+      onSuccess: () => {
+        toast.success(nextPinned ? 'Nota fijada.' : 'Nota desfijada.')
+      },
+      onError: (error) => {
+        toast.error(getErrorMessage(error))
+      },
+    })
+  }
+
   return (
     <header className="flex h-14 shrink-0 items-center gap-1 border-b border-paper-line bg-paper/90 px-2 backdrop-blur-xl sm:px-3">
       {!isFullscreen && (
@@ -84,6 +102,21 @@ export function NoteEditorHeader({
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <button
+          type="button"
+          onClick={togglePin}
+          disabled={pinNote.isPending}
+          title={note.pinned ? 'Desfijar nota' : 'Fijar nota'}
+          aria-label={note.pinned ? 'Desfijar nota' : 'Fijar nota'}
+          aria-pressed={note.pinned}
+          className={cn(
+            ICON_BUTTON_CLASS,
+            'disabled:opacity-50',
+            note.pinned && 'text-accent hover:text-accent',
+          )}
+        >
+          <PinIcon className="h-[18px] w-[18px]" />
+        </button>
         <ShareButton noteId={note.id} title={title} content={content} />
         <button
           type="button"

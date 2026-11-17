@@ -35,6 +35,12 @@
   --color-accent-3: #c98a2b;
 
   --animate-float: float 16s ease-in-out infinite;
+  --animate-sway: sway 9s ease-in-out infinite;
+  --animate-drift: drift 24s ease-in-out infinite;
+  --animate-wiggle: wiggle 6s ease-in-out infinite;
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-stamp: stamp 9s ease-in-out infinite;
+  --animate-blink: blink 1.3s steps(2, end) infinite;
   --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-toast-in: toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-toast-out: toast-out 0.16s ease-in both;
@@ -46,6 +52,61 @@
     }
     50% {
       transform: translateY(-26px) scale(1.06);
+    }
+  }
+
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(-1.8deg) translateY(0);
+    }
+    50% {
+      transform: rotate(1.8deg) translateY(-9px);
+    }
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(14px, -18px, 0);
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-1.5deg);
+    }
+    50% {
+      transform: rotate(1.5deg);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes stamp {
+    0%,
+    100% {
+      transform: rotate(-6deg) scale(1);
+    }
+    50% {
+      transform: rotate(-4deg) scale(1.035);
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
     }
   }
 
@@ -112,6 +173,7 @@
 @layer base {
   html {
     color-scheme: light;
+    scroll-behavior: smooth;
   }
 
   html.dark {
@@ -125,6 +187,10 @@
     -webkit-font-smoothing: antialiased;
     background-color: var(--color-canvas);
     color: var(--color-ink);
+  }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
   }
 }
 
@@ -174,6 +240,60 @@
     );
     background-size: 18px 18px;
   }
+
+  /* Landing: texturas de papel, cinta y sellos. */
+  .paper-lines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      color-mix(in oklab, var(--color-paper-ink) 8%, transparent) 31px,
+      color-mix(in oklab, var(--color-paper-ink) 8%, transparent) 32px
+    );
+  }
+
+  .paper-grid {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-paper-ink) 6%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-paper-ink) 6%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 24px 24px;
+  }
+
+  .desk-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+
+  .tape {
+    background: linear-gradient(135deg, rgb(251 247 238 / 0.78), rgb(228 220 203 / 0.55));
+    border-left: 1px dashed rgb(180 165 140 / 0.45);
+    border-right: 1px dashed rgb(180 165 140 / 0.45);
+    box-shadow: 0 1px 2px rgb(35 28 20 / 0.12);
+  }
+
+  .stitch {
+    border: 1px dashed color-mix(in srgb, var(--color-paper-line) 90%, transparent);
+  }
+
+  .stamp {
+    border: 2px solid color-mix(in srgb, var(--color-paper-accent) 65%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--color-paper-accent) 55%, transparent);
+    outline-offset: 3px;
+  }
+
+  details[open] .faq-plus {
+    transform: rotate(45deg);
+  }
 }
 
 /* Fondo del modal nativo `<dialog>`. */
@@ -196,9 +316,23 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .animate-sway,
+  .animate-drift,
+  .animate-wiggle,
+  .animate-marquee,
+  .animate-stamp,
+  .animate-blink,
+  .animate-float {
+    animation: none !important;
   }
 }

@@ -40,6 +40,12 @@ export interface SaveNotaResponse {
   data: NotaResponse
 }
 
+/** `Map.of("succes", true, "data", …)` de `PATCH /api/notas/update/{id}/fijado`. */
+export interface PinNotaResponse {
+  succes: boolean
+  data: string
+}
+
 /** Una nota tal como la usa la interfaz. */
 export interface Note {
   id: string
