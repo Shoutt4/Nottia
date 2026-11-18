@@ -1,6 +1,8 @@
 package com.example.backend.service.notas;
 
 import com.example.backend.mapper.nota.NotaMapperImpl;
+import com.example.backend.service.auth.CurrentUserService;
+import com.example.backend.service.cuaderno.CuadernoService;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +24,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class NotasService {
+    private final CurrentUserService currentUserService;
+    private final CuadernoService cuadernoService;
     private final NotaMapperImpl notaMapperImpl;
     private final NotasRepository notasRepository;
     private final JwtService jwtService;
@@ -30,13 +34,16 @@ public class NotasService {
     private final SaveNotaMapper saveNotaMapper;
 
     public NotasService(NotasRepository notasRepository, JwtService jwtService, CuadernoRepository cuadernoRepository,
-            NotaMapper nMapper, SaveNotaMapper saveNotaMapper, NotaMapperImpl notaMapperImpl) {
+            NotaMapper nMapper, SaveNotaMapper saveNotaMapper, NotaMapperImpl notaMapperImpl,
+            CuadernoService cuadernoService, CurrentUserService currentUserService) {
         this.notasRepository = notasRepository;
         this.jwtService = jwtService;
         this.cuadernoRepository = cuadernoRepository;
         this.mapperNota = nMapper;
         this.saveNotaMapper = saveNotaMapper;
         this.notaMapperImpl = notaMapperImpl;
+        this.cuadernoService = cuadernoService;
+        this.currentUserService = currentUserService;
     }
 
     public NotasResponse responseNotas(Nota nota) {
@@ -131,6 +138,18 @@ public class NotasService {
         Nota nota = this.notasRepository.findByIdNota(idNota).orElseThrow(
                 () -> new ErrorGlobal("id nota no existent :", 404, false));
         return responseNotas(nota);
+    }
+
+    public Map<String, Object> updateFijadoNota(String idNota, boolean fiajdo) {
+        if (this.notasRepository.existsById(idNota)) {
+            return Map.of(
+                    "succes", true,
+                    "data", "se actualizo correctamente + " + this.notasRepository.updateNotaFijado(fiajdo, idNota,
+                            this.currentUserService.getCurrentUserId()));
+
+        } else {
+            throw new ErrorGlobal("nota no encotrada con id : " + idNota, 404, false);
+        }
     }
 
 }

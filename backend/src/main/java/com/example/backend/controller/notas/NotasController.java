@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +81,13 @@ public class NotasController {
     public ResponseEntity<Page<NotasResponse>> getNotaByCuaderno(@Valid @RequestHeader("Authorization") String token,
             @PathVariable String id, Pageable page) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.getAllByCuaderno(token, id, page));
+    }
+
+    @PreAuthorize("hasRole('USUARIO')")
+    @PatchMapping("/update/{id}/fijado")
+    public ResponseEntity<Map<String, Object>> updateFijado(@Valid @PathVariable String id,
+            @RequestParam boolean estado) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.notasService.updateFijadoNota(id, estado));
     }
 
 }

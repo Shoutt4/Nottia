@@ -10,4 +10,5 @@ import com.example.backend.entity.Actividades;
 @Repository
 public interface ActividadRespository extends JpaRepository<Actividades, String> {
 
+
 }

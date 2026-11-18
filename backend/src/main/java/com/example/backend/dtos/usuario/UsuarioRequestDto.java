@@ -23,7 +23,6 @@ public class UsuarioRequestDto {
     @Column(nullable = false)
     @Size(min = 8, max = 50, message = "la contraseña debe contener entre 8 a 50 caracteres")
     private String password;
-
     private String urlAvatar;
     @Size(min = 8, max = 30)
     private String phone;
