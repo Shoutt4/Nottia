@@ -43,7 +43,7 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(this.usuarioService.updateUser(token, requestDto));
     }
 
-    @PreAuthorize("hasRole('USUARIO') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USUARIO')")
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> getDetaills(@Valid @RequestHeader("Authorization") String token) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.usuarioService.getDetaiillsUser(token));
