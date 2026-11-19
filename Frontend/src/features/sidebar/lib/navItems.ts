@@ -1,4 +1,11 @@
-import { CalendarIcon, HomeIcon, NotebookIcon, UserIcon, UsersIcon } from '@/components/ui/icons'
+import {
+  CalendarEventIcon,
+  CalendarIcon,
+  HomeIcon,
+  NotebookIcon,
+  UserIcon,
+  UsersIcon,
+} from '@/components/ui/icons'
 import { ROUTES } from '@/config/routes'
 
 import type { NavItem } from '../types'
@@ -8,6 +15,7 @@ export const navItems: NavItem[] = [
   { to: ROUTES.dashboard, label: 'Inicio', Icon: HomeIcon },
   { to: ROUTES.notebooks, label: 'Cuadernos', Icon: NotebookIcon },
   { to: ROUTES.activities, label: 'Actividades', Icon: CalendarIcon },
+  { to: ROUTES.calendar, label: 'Calendario', Icon: CalendarEventIcon },
   { to: ROUTES.profile, label: 'Perfil', Icon: UserIcon },
 ]
 

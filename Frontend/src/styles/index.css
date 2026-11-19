@@ -294,6 +294,294 @@
   details[open] .faq-plus {
     transform: rotate(45deg);
   }
+
+  /* Calendario de eventos: notas de color pegadas sobre la hoja.
+     El tono viaja en `data-tone` y se mezcla con los tokens del papel, así
+     que también se adapta al modo oscuro sin reglas `dark:` por componente. */
+  .event-tone {
+    --event-tone: var(--color-paper-accent);
+  }
+
+  .event-tone[data-tone='1'] {
+    --event-tone: var(--color-accent-2);
+  }
+
+  .event-tone[data-tone='2'] {
+    --event-tone: var(--color-accent-3);
+  }
+
+  .event-tone[data-tone='3'] {
+    --event-tone: var(--color-accent);
+  }
+
+  .event-chip {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--event-tone) 38%, var(--color-paper-line));
+    border-left: 3px solid var(--event-tone);
+    border-radius: 3px;
+    background-color: color-mix(in oklab, var(--event-tone) 13%, var(--color-paper));
+    padding: 0.12rem 0.3rem;
+    color: var(--color-paper-ink);
+    font-size: 0.66rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition:
+      transform 0.18s ease,
+      background-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .event-chip:hover {
+    transform: translateY(-1px);
+    background-color: color-mix(in oklab, var(--event-tone) 22%, var(--color-paper));
+    box-shadow: 0 4px 10px -6px color-mix(in oklab, var(--event-tone) 55%, transparent);
+  }
+
+  .event-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+
+  .event-dot {
+    display: inline-block;
+    height: 0.45rem;
+    width: 0.45rem;
+    flex: none;
+    border-radius: 9999px;
+    background-color: var(--event-tone);
+  }
+}
+
+/* FullCalendar · versión "papel" para el calendario de eventos.
+   Va sin `@layer` para poder ajustar los estilos que la librería inyecta. */
+.notebook-calendar {
+  --fc-border-color: var(--color-paper-line);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: color-mix(in oklab, var(--color-desk) 40%, transparent);
+  --fc-today-bg-color: color-mix(in oklab, var(--color-accent) 9%, transparent);
+  --fc-button-bg-color: var(--color-paper);
+  --fc-button-border-color: var(--color-paper-line);
+  --fc-button-text-color: var(--color-paper-muted);
+  --fc-button-hover-bg-color: var(--color-desk);
+  --fc-button-hover-border-color: var(--color-paper-accent);
+  --fc-button-active-bg-color: var(--color-accent);
+  --fc-button-active-border-color: var(--color-accent);
+  --fc-button-active-text-color: var(--color-on-accent);
+  --fc-event-bg-color: transparent;
+  --fc-event-border-color: transparent;
+  --fc-event-text-color: var(--color-paper-ink);
+  --fc-event-selected-overlay-color: transparent;
+  --fc-highlight-color: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  --fc-more-link-bg-color: var(--color-accent-soft);
+  --fc-more-link-text-color: var(--color-accent);
+  color: var(--color-paper-ink);
+}
+
+.notebook-calendar .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.notebook-calendar .fc-toolbar-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--color-paper-ink);
+}
+
+.notebook-calendar .fc-toolbar-title::first-letter {
+  text-transform: uppercase;
+}
+
+.notebook-calendar .fc-button {
+  border-radius: 9999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  box-shadow: none;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.notebook-calendar .fc-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.notebook-calendar .fc-button-primary:not(:disabled):hover {
+  color: var(--color-paper-ink);
+}
+
+.notebook-calendar .fc-button-primary:not(:disabled).fc-button-active,
+.notebook-calendar .fc-button-primary:not(:disabled):active {
+  color: var(--color-on-accent);
+}
+
+.notebook-calendar .fc-button-primary:disabled {
+  opacity: 0.45;
+}
+
+.notebook-calendar .fc .fc-button-group > .fc-button {
+  border-radius: 9999px;
+}
+
+.notebook-calendar .fc-button-group {
+  gap: 0.25rem;
+}
+
+.notebook-calendar .fc-scrollgrid {
+  overflow: hidden;
+  border-radius: 4px;
+  border-color: var(--color-paper-line);
+}
+
+.notebook-calendar .fc-theme-standard td,
+.notebook-calendar .fc-theme-standard th {
+  border-color: var(--color-paper-line);
+}
+
+.notebook-calendar .fc-col-header-cell {
+  background-color: color-mix(in oklab, var(--color-desk) 35%, transparent);
+}
+
+.notebook-calendar .fc-col-header-cell-cushion {
+  padding: 0.5rem 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-paper-muted);
+}
+
+.notebook-calendar .fc-daygrid-day {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.notebook-calendar .fc-daygrid-day:hover {
+  background-color: color-mix(in oklab, var(--color-accent) 5%, transparent);
+}
+
+.notebook-calendar .fc-daygrid-day-frame {
+  min-height: clamp(5rem, 10vh, 7.25rem);
+}
+
+.notebook-calendar .fc-daygrid-day-top {
+  flex-direction: row;
+}
+
+.notebook-calendar .fc-daygrid-day-number {
+  display: inline-grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 2px;
+  place-items: center;
+  border-radius: 9999px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-paper-ink);
+}
+
+.notebook-calendar .fc-day-other .fc-daygrid-day-number {
+  color: color-mix(in oklab, var(--color-paper-muted) 70%, transparent);
+}
+
+.notebook-calendar .fc-daygrid-day.fc-day-other {
+  background-color: color-mix(in oklab, var(--color-desk) 45%, transparent);
+}
+
+.notebook-calendar .fc-day-today .fc-daygrid-day-number {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.notebook-calendar .fc-daygrid-day-events {
+  margin: 0 2px 2px;
+}
+
+.notebook-calendar .fc-daygrid-event {
+  margin-top: 1px;
+  border-radius: 3px;
+}
+
+.notebook-calendar .fc-event.fc-event-paper {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.notebook-calendar .fc-event.fc-event-paper:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.notebook-calendar .fc-daygrid-more-link {
+  padding: 1px 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-paper-muted);
+}
+
+.notebook-calendar .fc-daygrid-more-link:hover {
+  color: var(--color-paper-accent);
+}
+
+.notebook-calendar .fc-popover {
+  overflow: hidden;
+  border-color: var(--color-paper-line);
+  border-radius: 6px;
+  background-color: var(--color-paper);
+  box-shadow: 0 20px 40px -24px rgb(35 28 20 / 0.55);
+}
+
+.notebook-calendar .fc-popover-header {
+  background-color: var(--color-desk);
+  color: var(--color-paper-ink);
+}
+
+@media (max-width: 639px) {
+  .notebook-calendar .fc-toolbar {
+    align-items: center;
+  }
+
+  .notebook-calendar .fc-toolbar-chunk:nth-child(2) {
+    order: -1;
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 0.25rem;
+  }
+
+  .notebook-calendar .fc-toolbar-title {
+    font-size: 1.35rem;
+  }
+
+  .notebook-calendar .fc-daygrid-day-frame {
+    min-height: 4.5rem;
+  }
+
+  .notebook-calendar .fc-col-header-cell-cushion {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+  }
 }
 
 /* Fondo del modal nativo `<dialog>`. */

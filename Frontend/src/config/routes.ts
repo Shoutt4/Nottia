@@ -12,6 +12,7 @@ export const ROUTES = {
   notebookNew: '/cuadernos/nuevo',
   activities: '/actividades',
   activitiesShare: '/actividades/compartir',
+  calendar: '/calendario',
   profile: '/perfil',
   notes: '/notas',
   noteShare: '/notas/compartir',

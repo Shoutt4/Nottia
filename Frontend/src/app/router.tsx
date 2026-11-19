@@ -20,6 +20,7 @@ import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { LandingPage } from '@/pages/landing/LandingPage'
 
 import { AdminRoute } from './AdminRoute'
+import { CalendarRoute } from './CalendarRoute'
 import { ProtectedRoute } from './ProtectedRoute'
 import { PublicOnlyRoute } from './PublicOnlyRoute'
 
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
         children: [
           { path: ROUTES.dashboard, element: <HomePage /> },
           { path: ROUTES.activities, element: <ActivitiesPage /> },
+          { path: ROUTES.calendar, element: <CalendarRoute /> },
           { path: ROUTES.notebooks, element: <NotebooksPage /> },
           { path: ROUTES.notebookNew, element: <NotebookDesignerPage /> },
           { path: `${ROUTES.notebooks}/:notebookId/notas`, element: <NotebookNotesPage /> },

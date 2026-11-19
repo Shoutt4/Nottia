@@ -158,6 +158,16 @@ export function PrinterIcon(props: IconProps) {
   )
 }
 
+export function ExternalLinkIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M14 4h6v6" />
+      <path d="m20 4-8.5 8.5" />
+      <path d="M18 14.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10" />
+    </Icon>
+  )
+}
+
 export function SparkleIcon(props: IconProps) {
   return (
     <Icon {...props}>
