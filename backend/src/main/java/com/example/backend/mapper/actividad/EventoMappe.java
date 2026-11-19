@@ -2,6 +2,7 @@ package com.example.backend.mapper.actividad;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import com.example.backend.dtos.actividades.EventoRequestDTO;
 import com.example.backend.dtos.actividades.EventoResponseDTO;
@@ -27,5 +28,14 @@ public interface EventoMappe {
     @Mapping(target = "createAt", ignore = true)
     @Mapping(target = "updateAt", ignore = true)
     Evento toSave(EventoRequestDTO requestDTO);
+
+    @Mapping(target = "idEvento", ignore = true)
+    @Mapping(target = "titulo", source = "titulo")
+    @Mapping(target = "descripcion", source = "descripcion")
+    @Mapping(target = "fecha", source = "fecha")
+    @Mapping(target = "usuario", ignore = true)
+    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
+    Evento toUpdate(EventoRequestDTO requestDTO, @MappingTarget Evento entity);
 
 }

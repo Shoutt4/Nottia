@@ -41,4 +41,25 @@ public class EventoService {
         evento.setUsuario(usuario);
         return this.eventoMappe.toResponse(this.EventoRepository.save(evento));
     }
+
+    public EventoResponseDTO updaeEvento(String idEvento, EventoRequestDTO requestDTO) {
+        if (this.EventoRepository.existsByUsuario_idUsuarioAndIdEvento(currentUserService.getCurrentUserId(),
+                idEvento)) {
+            return this.eventoMappe.toResponse(this.EventoRepository.save(eventoMappe.toUpdate(requestDTO,
+                    this.EventoRepository.findByIdEventoAndUsuario_idUsuario(idEvento,
+                            currentUserService.getCurrentUserId()))));
+        } else {
+            throw new ErrorGlobal("no exuste nigun evento con las especificaciones", 404, false);
+        }
+    }
+
+    public EventoResponseDTO getById(String idEvento) {
+        if (this.EventoRepository.existsByUsuario_idUsuarioAndIdEvento(currentUserService.getCurrentUserId(),
+                idEvento)) {
+            return eventoMappe.toResponse(this.EventoRepository.findById(idEvento).orElseThrow(
+                    () -> new ErrorGlobal("no existe ningu registro con el id :" + idEvento, 404, false)));
+        } else {
+            throw new ErrorGlobal("no existe evento registrado", 404, false);
+        }
+    }
 }
