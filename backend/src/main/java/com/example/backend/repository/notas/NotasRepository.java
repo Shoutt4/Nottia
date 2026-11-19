@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.JpqlQueryBuilder.Select;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.backend.dtos.notas.NotasResponse;
+
 import com.example.backend.entity.Nota;
 
 import jakarta.transaction.Transactional;

@@ -10,7 +10,6 @@ import java.util.HexFormat;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import com.example.backend.repository.auth.EmailVerificationTokenRepository;
 import com.example.backend.service.EmailService;
 
 @Service
-@PropertySource("classpath:email.properties")
 public class EmailVerificationTokenService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final AuthRepository authRepository;

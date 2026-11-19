@@ -1,6 +1,5 @@
 package com.example.backend.service.actividades;
 
-import java.security.PublicKey;
 import java.util.List;
 
 import org.springframework.data.domain.Page;

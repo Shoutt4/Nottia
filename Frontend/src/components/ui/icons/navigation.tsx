@@ -68,6 +68,16 @@ export function CalendarIcon(props: IconProps) {
   )
 }
 
+export function CalendarEventIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
+      <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+      <path d="m12 12.5.75 1.9 1.9.75-1.9.75L12 17.8l-.75-1.9-1.9-.75 1.9-.75.75-1.9Z" />
+    </Icon>
+  )
+}
+
 export function SearchIcon(props: IconProps) {
   return (
     <Icon {...props}>

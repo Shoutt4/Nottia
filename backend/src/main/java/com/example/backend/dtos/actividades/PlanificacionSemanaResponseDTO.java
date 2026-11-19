@@ -2,10 +2,6 @@ package com.example.backend.dtos.actividades;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-import com.example.backend.entity.Actividades;
-import com.example.backend.entity.Usuario;
-
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;

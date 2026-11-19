@@ -1,8 +1,7 @@
 package com.example.backend.dtos.actividades;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
